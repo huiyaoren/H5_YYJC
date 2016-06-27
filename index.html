@@ -13,11 +13,11 @@
     <script src="app/static/js/Role.js"></script>
     <script src="app/static/js/Database.js"></script>
     <script>
-        $(function(){
+        $(function () {
             var director = new Director($(_scene));
 
             var loginScene = new LoginScene();
-//            var signScene = new SignScene();
+            var signScene = new SignScene();
             var mainScene = new MainScene();
 //            var shopScene = new ShopScene();
             var gameScene = new GameScene();
@@ -32,18 +32,15 @@
 
 
 
-            director.runScene(loginScene);
-            loginScene.bind("clickSignButton", function(){
-                director.runScene(mainScene);
-            });
 // ---------------------------- -----------------------------------------------
 
-
-//            director.runScene(loginScene);
-
-//            loginScene.bind("clickSignButton", function(){
-//                director.runScene(signScene);
-//            });
+            director.runScene(loginScene);
+            loginScene.bind("clickSignButton", function () {
+                director.runScene(signScene);
+            });
+            signScene.bind("returnToLogin", function () {
+                director.runScene(loginScene);
+            });
 //            signScene.bind("SignSuccess", function(){
 //                director.runScene(loginScene);
 //            });
@@ -81,11 +78,10 @@
 //            });
 
 
-
         })
     </script>
 </head>
 <body>
-    <div id="_scene" style="width: 100%; height: 100%"></div>
+<div id="_scene" style="width: 100%; height: 100%"></div>
 </body>
 </html>

@@ -93,6 +93,81 @@ body, html {
 /*
 ---------------------------------------------------------------------*/
 
+#_sign {
+    width: 100%;
+    height: 100%;
+    background-image: url(../img/SplashLG.jpg);
+    background-position: center;
+    text-align: center;
+}
+
+#_sign_center {
+    width: 500px;
+    height: 100%;
+    margin: auto 0;
+    display: inline-block;
+}
+
+#_sign_center_empty {
+    width: 0;
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle
+}
+
+#_sign_center_box {
+    width: 96%;
+    height: 420px;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    position: relative;
+    background-image: url(../img/login_box.png); /*todo 线性渐变 半透明 */
+    background-size: 100% 100%;
+}
+
+#_sign_center_box > img {
+    margin-top: 30px;
+}
+
+#_sign_center_box > img:nth-child(4) {
+    cursor: pointer;
+}
+#_sign_center_box > img:nth-child(5) {
+    cursor: pointer;
+    position: absolute;
+    right: -200px;
+    top: -50px;
+}
+#_sign_center_box input{
+    background: rgba(255, 255, 0, 0);
+    left: 96px;
+    width: 289px;
+    height: 35px;
+}
+#_sign_center_box input[name='username'] {
+
+    color: white;
+    position: absolute;
+    top: 45px;
+}
+
+#_sign_center_box input[name='password1'] {
+
+    color: white;
+    position: absolute;
+    top: 141px;
+}
+#_sign_center_box input[name='password2'] {
+
+    color: white;
+    position: absolute;
+    top: 237px;
+}
+
+/*
+---------------------------------------------------------------------*/
+
 #_main {
     width: 100%;
     height: 100%;

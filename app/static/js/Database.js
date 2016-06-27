@@ -11,7 +11,7 @@ function execute_sql(db, sql, data) {
             function () {
             },
             function (tx, error) {
-                console.log(error.message)
+                //console.log(error.message)
             }
         );
     });
@@ -24,7 +24,7 @@ function get_attr_name(attr) {
         name += i + ', ';
     }
     name = name.slice(0, -2);
-    console.log(name);
+    //console.log(name);
     return name
 }
 
@@ -35,7 +35,7 @@ function get_attr_item(attr) {
         item += i + ' ' + attr[i] + ', \n';
     }
     item = item.slice(0, -3);
-    console.log(item);
+    //console.log(item);
     return item
 }
 
@@ -46,7 +46,7 @@ function create_question(attr) {
         question += '?, '
     }
     question = question.slice(0, -2);
-    console.log(question);
+    //console.log(question);
     return question
 }
 

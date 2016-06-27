@@ -11,68 +11,81 @@ function LoginScene() {
 
     this.mainBody = function () {
         this.createUI();
+        console.log($me);
         return $me
     };
 
     this.createUI = function () {
-        var $login_center = $("<div id='_login_center'></div>");
-        var $login_center_empty = $("<div id='_login_center_empty'></div>");
-        var $login_center_box = $("<div id='_login_center_box'></div>");
 
         $me.append($("\
-        <div id='_login'>\
-        <div id='_login_center'>\
-            <div id='_login_center_empty'></div>\
-            <div id='_login_center_box'>\
-            <img src='app/static/img/userNumber.png'>\
-            <img src='app/static/img/password.png'>\
-            <img src='app/static/img/login_button.png'>\
-            <img src='app/static/img/register_button.png'>\
-            <input type='text' name='username'>\
-            <input type='password' name='password'>\
-            </div>\
+            <div id='_login_center'>\
+                <div id='_login_center_empty'></div>\
+                <div id='_login_center_box'>\
+                    <img src='app/static/img/userNumber.png'>\
+                    <img src='app/static/img/password.png'>\
+                    <img src='app/static/img/login_button.png'>\
+                    <img src='app/static/img/register_button.png'>\
+                    <input type='text' name='username'>\
+                    <input type='password' name='password'>\
+                </div>\
             </div>\
         "));
-        //$("<img src='app/static/img/userNumber.png'/>").appendTo($login_box);
-        //
-        //$("<img src='app/static/img/password.png'/>").appendTo($login_box);
-        //
-        //$("<img src='app/static/img/login_button.png'/>")
-        //    .click(function () {
-        //        alert();
-        //        $me.trigger("clickSignButton")
-        //    })
-        //    .appendTo($login_box);
-        //
-        //$("<img src='app/static/img/register_button.png'/>")
-        //    .click(function () {
-        //        alert();
-        //        $me.trigger("loginCorrect");
-        //    })
-        //    .appendTo($login_box);
-        //
-        //$("<img src='app/static/img/set.png'/>")
-        //    .click(function () {
-        //        alert();
-        //        $me.trigger("clickSettingButton");
-        //    }).appendTo($login_box);
-        //
-        //$("<input type='text' name='username'/>")
-        //    .appendTo($login_box);
-        //
-        //$("<input type='password' name='password'/>").appendTo($login_box);
-        //
-        //$login_center
-        //    .append($login_empty)
-        //    .append($login_box);
-        //
-        //$me
-        //    .append($login_center);
+        console.log($me)
     };
 
     this.bind = function (eventName, eventFn) {
-        $me.on(eventName, eventFn)
+        //$me.on(eventName, eventFn); todo 万恶之源
+        $(document.body).on(eventName, eventFn)
     };
+
+    this.run = function () {
+        $(_login_center_box).children("img:eq(3)").click(function () {
+            console.log("click");
+            $me.trigger("clickSignButton");
+            $me = $("<div id='_login'></div>");
+        });
+    }
+}
+
+function SignScene() {
+
+    var self = this;
+    var $me = $("<div id='_sign'></div>");
+
+    this.mainBody = function () {
+        this.createUI();
+        return $me
+    };
+
+    this.createUI = function () {
+
+        $me.append("\
+            <div id='_sign_center'>\
+                <div id='_sign_center_empty'></div>\
+                <div id='_sign_center_box'>\
+                    <img src='app/static/img/registerBox.png'>\
+                    <img src='app/static/img/registerBox.png'>\
+                    <img src='app/static/img/registerBox.png'>\
+                    <img src='app/static/img/newRegister.png'>\
+                    <img src='app/static/img/reBack.png'>\
+                    <input type='text' name='username' placeholder=' 请输入账号'>\
+                    <input type='password' name='password1' placeholder=' 请输入密码'>\
+                    <input type='password' name='password2' placeholder=' 请再次输入密码'>\
+                </div>\
+            </div>\
+        ");
+    };
+
+    this.bind = function (eventName, eventFn) {
+        $(document.body).on(eventName, eventFn)
+    };
+
+    this.run = function () {
+        $(_sign_center_box).children("img:eq(4)").click(function () {
+            $me.trigger("returnToLogin");
+            $me = $("<div id='_sign'></div>");
+        });
+    }
 }
 
 
@@ -85,20 +98,23 @@ function MainScene() {
         return $me
     };
     this.createUI = function () {
-        var $main_box = $("<div id='_main_box'></div>");
-        var $main_empty = $("<div id='_main_empty'></div>");
-        var $main_box_empty = $("<div id='_main_box_empty'></div>");
-        var $main_loading = $("<div id='_main_loading'></div>");
-
-        $me.append($main_empty);
-
-        $main_box
-            .append($main_box_empty)
-            .append($("<button></button>"))
-            .append($("<button></button>"))
-            .append($("<button></button>"))
-            .append($("<button></button>"))
-            .appendTo($me);
+        //var $main_box = $("<div id='_main_box'></div>");
+        //var $main_empty = $("<div id='_main_empty'></div>");
+        //var $main_box_empty = $("<div id='_main_box_empty'></div>");
+        //var $main_loading = $("<div id='_main_loading'></div>");
+        //
+        //$me.append($main_empty);
+        //
+        //$main_box
+        //    .append($main_box_empty)
+        //    .append($("<button></button>"))
+        //    .append($("<button></button>"))
+        //    .append($("<button></button>"))
+        //    .append($("<button></button>"))
+        //    .appendTo($me);
+    };
+    this.bind = function (eventName, eventFn) {
+        $(document.body).on(eventName, eventFn)
     };
 }
 
