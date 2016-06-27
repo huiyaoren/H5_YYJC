@@ -1,0 +1,161 @@
+* {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font-family: 'Microsoft Yahei', sans-serif;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+}
+
+/*
+---------------------------------------------------------------------*/
+
+#_login {
+    width: 100%;
+    height: 100%;
+    background-image: url(../img/SplashLG.jpg);
+    background-position: center;
+    text-align: center;
+}
+
+#_login_center {
+    width: 500px;
+    height: 100%;
+    margin: auto 0;
+    display: inline-block;
+}
+
+#_login_center_empty {
+    width: 0;
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle
+}
+
+#_login_center_box {
+    width: 96%;
+    height: 420px;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    position: relative;
+    background-image: url(../img/login_box.png); /*todo 线性渐变 半透明 */
+    background-size: 100% 100%;
+}
+
+#_login_center_box > img {
+    margin-top: 30px;
+}
+
+#_login_center_box > img:nth-child(2) {
+    /*position: absolute;*/
+    /*top: 100px;*/
+    /*left: 156px;*/
+}
+
+#_login_center_box > img:nth-child(3) {
+    cursor: pointer;
+    /*position: absolute;*/
+    /*top: 250px;*/
+    /*left: 20px;*/
+}
+
+#_login_center_box > img:nth-child(4) {
+    cursor: pointer;
+    /*position: absolute;*/
+    /*top: 250px;*/
+    /*right: 20px;*/
+}
+
+#_login_center_box input[name='username'] {
+    width: 210px;
+    height: 35px;
+    background: rgba(255, 255, 0, 0);
+    color: white;
+    position: absolute;
+    top: 45px;
+    left: 172px;
+}
+
+#_login_center_box input[name='password'] {
+    width: 210px;
+    height: 35px;
+    background: rgba(255, 255, 0, 0);
+    color: white;
+    position: absolute;
+    top: 141px;
+    left: 172px;
+}
+
+/*
+---------------------------------------------------------------------*/
+
+#_main {
+    width: 100%;
+    height: 100%;
+    background-image: url(../img/World1Background.jpg);
+    background-position: top center;
+    background-size: 100% 100%;
+    text-align: center;
+}
+
+#_main_box {
+    width: 800px;
+    /*height: 100%;*/
+    margin: 0 auto;
+    vertical-align: bottom;
+    text-align: center;
+    position: relative;
+}
+
+#_main_empty {
+    width: 100%;
+    height: 79%;
+}
+
+#_main_box button:nth-child(2) {
+    width: 95px;
+    height: 95px;
+    background: rgba(0, 0, 0, 0);
+    background-image: url(../img/help.png);
+    /* todo 垂直居中*/
+}
+
+#_main_box button:nth-child(3) {
+    width: 263px;
+    height: 69px;
+    background: rgba(0, 0, 0, 0);
+    background-image: url(../img/storeButton.png);
+}
+
+#_main_box button:nth-child(4) {
+    width: 263px;
+    height: 69px;
+    background: rgba(0, 0, 0, 0);
+    background-image: url(../img/singleGame.png);
+
+}
+
+#_main_box button:nth-child(5) {
+    width: 95px;
+    height: 95px;
+    background: rgba(0, 0, 0, 0);
+    background-image: url(../img/reBack.png);
+}
+
+#_main_box button {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#_main_box_empty {
+    width: 0;
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+}

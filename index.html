@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="app/static/css/index.css" rel="stylesheet">
+    <script src="app/static/js/jquery-1.12.0.min.js"></script>
+    <script src="app/static/js/Controller.js"></script>
+    <script src="app/static/js/Director.js"></script>
+    <script src="app/static/js/Speedometer.js"></script>
+    <script src="app/static/js/Map.js"></script>
+    <script src="app/static/js/Scene.js"></script>
+    <script src="app/static/js/Role.js"></script>
+    <script src="app/static/js/Database.js"></script>
+    <script>
+        $(function(){
+            var director = new Director($(_scene));
+
+            var loginScene = new LoginScene();
+//            var signScene = new SignScene();
+            var mainScene = new MainScene();
+//            var shopScene = new ShopScene();
+            var gameScene = new GameScene();
+//            var rankScene = new RankScene();
+//            var stageScene = new StageScene();
+//            var readyScene = new ReadyScene();
+            var db = openDatabase('db', 2, 'db', 1024 * 1024);
+            var user = new TB_User(db);
+//            user.drop()
+            user.insert(['admin3', 'admin', 'admin', 9999, 99, '[[],[],[],[]]', '[[],[],[],[]]', '[]']);
+
+
+
+
+            director.runScene(loginScene);
+            loginScene.bind("clickSignButton", function(){
+                director.runScene(mainScene);
+            });
+// ---------------------------- -----------------------------------------------
+
+
+//            director.runScene(loginScene);
+
+//            loginScene.bind("clickSignButton", function(){
+//                director.runScene(signScene);
+//            });
+//            signScene.bind("SignSuccess", function(){
+//                director.runScene(loginScene);
+//            });
+//
+//            loginScene.bind("clickSettingButton", function(){
+//                director.runScene(settingScene);
+//            });
+//            settingScene.bind("finishSetting", function(){
+//                director.runScene(loginScene);
+//            });
+//
+//            loginScene.bind("loginCorrect", function(){
+//                director.runScene(mainScene);
+//            });
+//            mainScene.bind("clickShopButton", function(){
+//                director.runScene(shopScene);
+//            });
+//            shopScene.bind("finishShopping", function(){
+//                director.runScene(mainScene);
+//            });
+//            mainScene.bind("clickPlayButton", function(){
+//                director.runScene(stageScene);
+//            });
+//            stageScene.bind("chooseStage", function(){
+//                director.runScene(readyScene);
+//            });
+//            readyScene.bind("startGame", function(){
+//                director.runScene(gameScene);
+//            });
+//            gameScene.bind("finishGame", function(){
+//                director.runScene(rankScene);
+//            });
+//            rankScene.bind("clickNextButton", function(){
+//                director.runScene(rankScene);
+//            });
+
+
+
+        })
+    </script>
+</head>
+<body>
+    <div id="_scene" style="width: 100%; height: 100%"></div>
+</body>
+</html>
