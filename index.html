@@ -16,13 +16,14 @@
         $(function () {
             var director = new Director($(_scene));
 
-            var loginScene = new LoginScene();
+            var loginScene = new LoginScene(); // todo 登陆一次后保留账号信息 不用再次输入
             var signScene = new SignScene();
             var mainScene = new MainScene();
+            var mapScene = new MapScene();
 //            var shopScene = new ShopScene();
             var gameScene = new GameScene();
 //            var rankScene = new RankScene();
-//            var stageScene = new StageScene();
+            var stageScene = new StageScene();
 //            var readyScene = new ReadyScene();
             var db = openDatabase('db', 2, 'db', 1024 * 1024);
             var user = new TB_User(db);
@@ -31,6 +32,9 @@
 
 
 
+            mainScene.bind("returnToLogin1", function () {
+                director.runScene(loginScene);
+            });
 
 // ---------------------------- -----------------------------------------------
 
@@ -52,9 +56,9 @@
 //                director.runScene(loginScene);
 //            });
 //
-//            loginScene.bind("loginCorrect", function(){
-//                director.runScene(mainScene);
-//            });
+            loginScene.bind("loginCorrect", function(){
+                director.runScene(mainScene);
+            });
 //            mainScene.bind("clickShopButton", function(){
 //                director.runScene(shopScene);
 //            });
