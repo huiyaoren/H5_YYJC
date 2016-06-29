@@ -3,10 +3,11 @@
  */
 
 
-
+// 登陆界面
 function LoginScene() {
 
     var self = this;
+    var $me_init = $("<div id='_login'></div>");
     var $me = $("<div id='_login'></div>");
 
     this.mainBody = function () {
@@ -39,14 +40,27 @@ function LoginScene() {
     };
 
     this.run = function () {
+
+        // 登陆框滑出动画
+        $me.children().hide();
+        $me.children().slideDown();
+
+        // 注册
         $(_login_center_box).children("img:eq(3)").click(function () {
-            console.log("click");
             $me.trigger("clickSignButton");
             $me = $("<div id='_login'></div>");
         });
+
+        // 登陆
+        $(_login_center_box).children("img:eq(2)").click(function () {
+            $me.trigger("loginCorrect");
+            $me = $("<div id='_login'></div>");
+        });
+
     }
 }
 
+// 注册界面
 function SignScene() {
 
     var self = this;
@@ -81,6 +95,8 @@ function SignScene() {
     };
 
     this.run = function () {
+        $me.children().hide();
+        $me.children().slideDown();
         $(_sign_center_box).children("img:eq(4)").click(function () {
             $me.trigger("returnToLogin");
             $me = $("<div id='_sign'></div>");
@@ -88,7 +104,7 @@ function SignScene() {
     }
 }
 
-
+// 主界面
 function MainScene() {
     var self = this;
     var $me = $("<div id='_main'></div>");
@@ -98,27 +114,210 @@ function MainScene() {
         return $me
     };
     this.createUI = function () {
-        //var $main_box = $("<div id='_main_box'></div>");
-        //var $main_empty = $("<div id='_main_empty'></div>");
-        //var $main_box_empty = $("<div id='_main_box_empty'></div>");
-        //var $main_loading = $("<div id='_main_loading'></div>");
-        //
-        //$me.append($main_empty);
-        //
-        //$main_box
-        //    .append($main_box_empty)
-        //    .append($("<button></button>"))
-        //    .append($("<button></button>"))
-        //    .append($("<button></button>"))
-        //    .append($("<button></button>"))
-        //    .appendTo($me);
+        $me.append('\
+            <div id="_main_loading">\
+                <div id="_main_loading_empty"></div>\
+                    <div id="_main_loading_box">\
+                        <img src="app/static/img/wheel/w2.png">\
+                        <meter value="0" min="0" max="100"></meter>\
+                        <h1>加载中...</h1>\
+                    </div>\
+                </div>\
+                <div id="_main_up">\
+                    <button></button>\
+                    <button></button>\
+                </div>\
+                <div id="_main_down">\
+                    <button><h1>开始游戏</h1></button>\
+                    <button><h1>个人仓库</button>\
+                    <button><h1>商店</button>\
+                </div>\
+            </div>\
+        ')
     };
     this.bind = function (eventName, eventFn) {
         $(document.body).on(eventName, eventFn)
     };
+
+    this.run = function () {
+        timer = setInterval(function () {
+            if ($(_main_loading_box).children("meter")[0].value < 100) {
+                $(_main_loading_box).children("meter")[0].value += 1;
+
+                var left = Number(
+                    $(_main_loading_box)
+                        .children("img")
+                        .css("left")
+                        .slice(0, -2));
+
+                console.log(left);
+
+                $(_main_loading_box)
+                    .children("img")
+                    .css("left", left + 740 / 100);// todo 移动距离增量有局限性
+
+                // todo 轮子转动动画
+            }
+            else {
+                clearInterval(timer);
+                $(_main_loading).remove();
+            }
+        }, 20);
+
+         //点击 返回按钮
+        $(_main_up).children("button:eq(0)").click(function () {
+            $me.trigger("returnToLogin1");
+            $me = $("<div id='_main'></div>")
+        })
+    }
 }
 
+// 赛段地图选择界面
+function MapScene() {
+    var self = this;
+    var $me = $("<div id='_map'></div>");
 
+    this.mainBody = function () {
+        this.createUI();
+        return $me
+    };
+    this.createUI = function () {
+        $me.append('\
+            <button></button>\
+            <div id="_map_empty"></div>\
+            <div id="_map_box">\
+            <div id="_map_box_map">\
+            <div class="_map1">\
+            <img src="app/static/img/bigStar0.png">\
+            </div>\
+            <div class="_map2">\
+            <img src="app/static/img/bigStar0.png">\
+            <img src="app/static/img/locked.png">\
+            </div>\
+            <div class="_map3">\
+            <img src="app/static/img/bigStar0.png">\
+            <img src="app/static/img/locked.png">\
+            </div>\
+            <div class="_map4">\
+            <img src="app/static/img/bigStar0.png">\
+            <img src="app/static/img/locked.png">\
+            </div>\
+            <div class="_map5">\
+            <img src="app/static/img/bigStar0.png">\
+            <img src="app/static/img/locked.png">\
+            </div>\
+            <div class="_map6">\
+            <img src="app/static/img/bigStar0.png">\
+            <img src="app/static/img/locked.png">\
+            </div>\
+            <div class="_map7">\
+            <img src="app/static/img/bigStar0.png">\
+            <img src="app/static/img/locked.png">\
+            </div>\
+            <div class="_map8">\
+            <img src="app/static/img/bigStar0.png">\
+            <img src="app/static/img/locked.png">\
+            </div>\
+            <div class="_map9">\
+            <img src="app/static/img/bigStar0.png">\
+            <img src="app/static/img/locked.png">\
+            </div>\
+            <div class="_map10">\
+            <img src="app/static/img/bigStar0.png">\
+            <img src="app/static/img/locked.png">\
+            </div>\
+            </div>\
+            </div>\
+        ')
+    };
+    this.bind = function (eventName, eventFn) {
+        $(document.body).on(eventName, eventFn)
+    };
+
+    this.run = function () {
+
+    }
+}
+
+// 赛事选择界面
+function StageScene() {
+    var self = this;
+    var $me = $("<div id='_stage'></div>");
+
+    this.mainBody = function () {
+        this.createUI();
+        return $me
+    };
+    this.createUI = function () {
+        $me.append('\
+            <button></button>\
+            <div id="_stage_box">\
+                <div id="_stage_box_empty"></div>\
+                    <div id="_stage_box_stage">\
+                        <img src="app/static/img/stage/WorldThumbnails1.png" />\
+                        <img src="app/static/img/stage/WorldThumbnails2.png" />\
+                        <img src="app/static/img/stage/WorldThumbnails3.png" />\
+                        <img src="app/static/img/right.png" />\
+                        <img src="app/static/img/left.png" />\
+                    </div>\
+                </div>\
+            </div>\
+        ')
+    };
+    this.bind = function (eventName, eventFn) {
+        $(document.body).on(eventName, eventFn)
+    };
+
+    this.run = function () {
+
+    }
+}
+
+// todo 商店
+function ShopScene() {
+    var self = this;
+    var $me = $("<div id='_shop'></div>");
+
+    this.mainBody = function () {
+        this.createUI();
+        return $me
+    };
+    this.createUI = function () {
+        $me.append('\
+        ')
+    };
+    this.bind = function (eventName, eventFn) {
+        $(document.body).on(eventName, eventFn)
+    };
+
+    this.run = function () {
+
+    }
+}
+
+// todo 结算
+function ResultScene() {
+    var self = this;
+    var $me = $("<div id='_result'></div>");
+
+    this.mainBody = function () {
+        this.createUI();
+        return $me
+    };
+    this.createUI = function () {
+        $me.append('\
+        ')
+    };
+    this.bind = function (eventName, eventFn) {
+        $(document.body).on(eventName, eventFn)
+    };
+
+    this.run = function () {
+
+    }
+}
+
+// todo 游戏界面
 function GameScene() {
     var self = this;
     var $me = $("<div class='_game'></div>");
