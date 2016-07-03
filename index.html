@@ -12,6 +12,8 @@
     <script src="app/static/js/Scene.js"></script>
     <script src="app/static/js/Role.js"></script>
     <script src="app/static/js/Database.js"></script>
+    <script src="app/static/js/jquery.validate.js"></script>
+    <script src="app/static/js/messages_zh.js"></script>
     <script>
         $(function () {
             var director = new Director($(_scene));
@@ -20,16 +22,62 @@
             var signScene = new SignScene();
             var mainScene = new MainScene();
             var mapScene = new MapScene();
-//            var shopScene = new ShopScene();
+            var shopScene = new ShopScene();
             var gameScene = new GameScene();
-//            var rankScene = new RankScene();
+            var resultScene = new ResultScene();
             var stageScene = new StageScene();
 //            var readyScene = new ReadyScene();
             var db = openDatabase('db', 2, 'db', 1024 * 1024);
             var user = new TB_User(db);
-//            user.drop()
-            user.insert(['admin3', 'admin', 'admin', 9999, 99, '[[],[],[],[]]', '[[],[],[],[]]', '[]']);
+            var biker = new TB_Biker(db);
+            var moto = new TB_Moto(db);
+            var wheel = new TB_Wheel(db);
+            var engine = new TB_Engine(db);
 
+
+//            var s = '[1, 1, 2, 2]';
+//            console.log(s);// todo
+//            console.log(eval(String(s)));// todo
+//            console.log('[' + String(eval(String(s)))+']');// todo
+
+            user.create();
+
+            biker.drop();
+            biker.create();
+            biker.insert([2, 'kill_you', '角色2', 0]);
+            biker.insert([3, 'need_to_pee', '角色3', 200]);
+            biker.insert([4, 'run_away', '角色4', 200]);
+            biker.insert([5, 'ohh_shit', '角色5', 200]);
+            biker.insert([6, 'you_jump', '角色6', 200]);
+            biker.insert([7, 'i_jump', '角色7', 200]);
+            biker.insert([8, 'you_idiot', '角色8', 200]);
+
+            moto.drop();
+            moto.create();
+            moto.insert([1, 100, '车身1', 0]);
+            moto.insert([2, 105, '车身2', 100]);
+            moto.insert([3, 110, '车身3', 200]);
+            moto.insert([4, 115, '车身4', 300]);
+
+            wheel.drop(); //todo
+            wheel.create();
+            wheel.insert([1, 5, '车轮1', 0]);
+            wheel.insert([2, 6, '车轮2', 100]);
+            wheel.insert([3, 7, '车轮3', 200]);
+            wheel.insert([4, 8, '车轮4', 250]);
+
+            engine.drop(); //todo
+            engine.create();
+            engine.insert([1, 1, '引擎1', 0]);
+            engine.insert([2, 2, '引擎2', 100]);
+            engine.insert([3, 3, '引擎3', 150]);
+            engine.insert([4, 4, '引擎4', 200]);
+            engine.insert([5, 5, '引擎5', 250]);
+            engine.insert([6, 6, '引擎6', 300]);
+
+//            user.update(["password=234234", "username=123123"]);
+//            user.insert(['123123', '123123', 'admin', 9999, 99, '[[],[],[],[]]', '[[],[],[],[]]', '[]']);
+//            user.drop();
 
 
             mainScene.bind("returnToLogin1", function () {
@@ -38,16 +86,77 @@
 
 // ---------------------------- -----------------------------------------------
 
-            director.runScene(loginScene);
+            director.runScene(mainScene);
+
             loginScene.bind("clickSignButton", function () {
                 director.runScene(signScene);
             });
+
             signScene.bind("returnToLogin", function () {
                 director.runScene(loginScene);
             });
-//            signScene.bind("SignSuccess", function(){
-//                director.runScene(loginScene);
-//            });
+
+            signScene.bind("signSuccess", function (e, form) {
+                var username = $(form).children("input[name=username]").val();
+                var password = $(form).children("input[name=password1]").val();
+
+
+                user.select(['*', "username='" + username + "'"], function (result) {
+
+                    console.log("查找用户名结果数|注册：" + result.rows.length);
+
+                    if (result.rows.length != 0) {
+                        alert("该账号名已被使用");
+                    }
+                    else if (result.rows.length == 0) {
+
+                        user.insert([
+                            username,
+                            password,
+                            username,
+                            9999,
+                            99,
+                            '[[],[],[],[]]',
+                            '[[],[],[],[]]',
+                            '[]'
+                        ]);
+
+                        alert("注册成功,即将跳转至登陆界面");
+                        director.runScene(loginScene);
+                    }
+                });
+            });
+
+            loginScene.bind("loginCorrect", function (e, form) {
+
+                var username = $(form).children("input[name=username]").val();
+                var password = $(form).children("input[name=password]").val();
+
+//                console.log(form)
+                user.select(['*', "username='" + username + "'"], function (result) {
+//                    console.log(result.rows);
+                    console.log("数据匹配用户名数量|登陆: " + result.rows.length);
+                    if (result.rows.length == 0) {
+
+                        alert("账号名不存在");
+
+                    } else {
+
+                        // 验证密码
+                        console.log("用户数据库密码|登陆: " + result.rows.item(0).password);
+
+                        if (password == result.rows.item(0).password) {
+                            alert('登陆成功');
+                            director.runScene(mainScene);
+                        } else {
+                            alert('密码错误');
+                            $(form).children("input[name=password]").val("")
+                        }
+                    }
+                });
+
+            });
+
 //
 //            loginScene.bind("clickSettingButton", function(){
 //                director.runScene(settingScene);
@@ -56,12 +165,34 @@
 //                director.runScene(loginScene);
 //            });
 //
-            loginScene.bind("loginCorrect", function(){
-                director.runScene(mainScene);
+            mainScene.bind("clickShopButton", function () {
+                director.runScene(shopScene);
             });
-//            mainScene.bind("clickShopButton", function(){
-//                director.runScene(shopScene);
-//            });
+
+            shopScene.bind("LoadShop", function (e,shop) {
+//                alert(); //todo ?? 直接载入不执行 从主界面跳转才执行
+
+                biker.select(['*', 'role_id>1'], function (result) {
+                    console.log("查询结果数量|角色："+result.rows.length);
+                    $(shop).empty();
+                    for (var i = 0; i < result.rows.length; i++) {
+//                        var $item = $("<div class='_shopItem'></div>")
+                        var $item = $('\
+                            <div class="_shopItem">\
+                                <h2>' + result.rows.item(i).name + '</h2>\
+                                <img src="app/static/img/biker/c' + result.rows.item(i).role_id + 's.png">\
+                                <span>价格：' + result.rows.item(i).price + '</span>\
+                                <button></button>\
+                                <button></button>\
+                            </div>\
+                        ');
+                        console.log($item[0]);
+                        $(shop).append($item);// todo
+//
+                    }
+                })
+            });
+
 //            shopScene.bind("finishShopping", function(){
 //                director.runScene(mainScene);
 //            });
