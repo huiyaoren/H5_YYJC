@@ -16,8 +16,8 @@
     <script src="app/static/js/messages_zh.js"></script>
     <script>
         $(function () {
-            var director = new Director($(_scene));
 
+            var director = new Director($(_scene));
             var loginScene = new LoginScene(); // todo 登陆一次后保留账号信息 不用再次输入
             var signScene = new SignScene();
             var mainScene = new MainScene();
@@ -44,36 +44,36 @@
 
             biker.drop();
             biker.create();
-            biker.insert([2, 'kill_you', '角色2', 0]);
-            biker.insert([3, 'need_to_pee', '角色3', 200]);
-            biker.insert([4, 'run_away', '角色4', 200]);
-            biker.insert([5, 'ohh_shit', '角色5', 200]);
-            biker.insert([6, 'you_jump', '角色6', 200]);
-            biker.insert([7, 'i_jump', '角色7', 200]);
-            biker.insert([8, 'you_idiot', '角色8', 200]);
+            biker.insert([2, 'kill_you', '角色2', 0, 'biker/c2s.png', 'biker/c2.png', 'biker/cha2.png']);
+            biker.insert([3, 'need_to_pee', '角色3', 200, 'biker/c3s.png', 'biker/c3.png', 'biker/cha3.png']);
+            biker.insert([4, 'run_away', '角色4', 200, 'biker/c4s.png', 'biker/c4.png', 'biker/cha4.png']);
+            biker.insert([5, 'ohh_shit', '角色5', 200, 'biker/c5s.png', 'biker/c5.png', 'biker/cha5.png']);
+            biker.insert([6, 'you_jump', '角色6', 200, 'biker/c6s.png', 'biker/c6.png', 'biker/cha6.png']);
+            biker.insert([7, 'i_jump', '角色7', 200, 'biker/c7s.png', 'biker/c7.png', 'biker/cha7.png']);
+            biker.insert([8, 'you_idiot', '角色8', 200, 'biker/c8s.png', 'biker/c8.png', 'biker/cha8.png']);
 
             moto.drop();
             moto.create();
-            moto.insert([1, 100, '车身1', 0]);
-            moto.insert([2, 105, '车身2', 100]);
-            moto.insert([3, 110, '车身3', 200]);
-            moto.insert([4, 115, '车身4', 300]);
+            moto.insert([101, 100, '车身1', 0, 'moto/m1s.png', 'moto/m1.png']);
+            moto.insert([102, 105, '车身2', 100, 'moto/m2s.png', 'moto/m2.png']);
+            moto.insert([103, 110, '车身3', 200, 'moto/m3s.png', 'moto/m3.png']);
+            moto.insert([104, 115, '车身4', 300, 'moto/m4s.png', 'moto/m4.png']);
 
-            wheel.drop(); //todo
+            wheel.drop();
             wheel.create();
-            wheel.insert([1, 5, '车轮1', 0]);
-            wheel.insert([2, 6, '车轮2', 100]);
-            wheel.insert([3, 7, '车轮3', 200]);
-            wheel.insert([4, 8, '车轮4', 250]);
+            wheel.insert([201, 5, '车轮1', 0, 'wheel/w1s.png', 'wheel/w1.png']);
+            wheel.insert([202, 6, '车轮2', 100, 'wheel/w2s.png', 'wheel/w2.png']);
+            wheel.insert([203, 7, '车轮3', 200, 'wheel/w3s.png', 'wheel/w3.png']);
+            wheel.insert([204, 8, '车轮4', 250, 'wheel/w4s.png', 'wheel/w4.png']);
 
-            engine.drop(); //todo
+            engine.drop();
             engine.create();
-            engine.insert([1, 1, '引擎1', 0]);
-            engine.insert([2, 2, '引擎2', 100]);
-            engine.insert([3, 3, '引擎3', 150]);
-            engine.insert([4, 4, '引擎4', 200]);
-            engine.insert([5, 5, '引擎5', 250]);
-            engine.insert([6, 6, '引擎6', 300]);
+            engine.insert([301, 1, '引擎1', 0, 'engine/engine1.png']);
+            engine.insert([302, 2, '引擎2', 100, 'engine/engine2.png']);
+            engine.insert([303, 3, '引擎3', 150, 'engine/engine3.png']);
+            engine.insert([304, 4, '引擎4', 200, 'engine/engine4.png']);
+            engine.insert([305, 5, '引擎5', 250, 'engine/engine5.png']);
+            engine.insert([306, 6, '引擎6', 300, 'engine/engine6.png']);
 
 //            user.update(["password=234234", "username=123123"]);
 //            user.insert(['123123', '123123', 'admin', 9999, 99, '[[],[],[],[]]', '[[],[],[],[]]', '[]']);
@@ -81,12 +81,13 @@
 
 
             mainScene.bind("returnToLogin1", function () {
-                director.runScene(loginScene);
+                director.runScene(shopScene);
+                // todo 清空 localstorage
             });
 
 // ---------------------------- -----------------------------------------------
 
-            director.runScene(mainScene);
+            director.runScene(stageScene);
 
             loginScene.bind("clickSignButton", function () {
                 director.runScene(signScene);
@@ -120,8 +121,8 @@
                             '[[],[],[],[]]',
                             '[]'
                         ]);
-
-                        alert("注册成功,即将跳转至登陆界面");
+                        // todo 用户数据存至localstorage
+                        alert("注册成功,将跳转至登陆界面");
                         director.runScene(loginScene);
                     }
                 });
@@ -157,7 +158,6 @@
 
             });
 
-//
 //            loginScene.bind("clickSettingButton", function(){
 //                director.runScene(settingScene);
 //            });
@@ -169,36 +169,75 @@
                 director.runScene(shopScene);
             });
 
-            shopScene.bind("LoadShop", function (e,shop) {
+            shopScene.bind("LoadShop", function (e, shop, review) {
 //                alert(); //todo ?? 直接载入不执行 从主界面跳转才执行
 
-                biker.select(['*', 'role_id>1'], function (result) {
-                    console.log("查询结果数量|角色："+result.rows.length);
+                function load_item(result) {
                     $(shop).empty();
                     for (var i = 0; i < result.rows.length; i++) {
 //                        var $item = $("<div class='_shopItem'></div>")
                         var $item = $('\
-                            <div class="_shopItem">\
+                            <div class="_shopItem" data-id="' + result.rows.item(i).id + '">\
                                 <h2>' + result.rows.item(i).name + '</h2>\
-                                <img src="app/static/img/biker/c' + result.rows.item(i).role_id + 's.png">\
+                                <img src="app/static/img/' + result.rows.item(i).img_1 + '">\
                                 <span>价格：' + result.rows.item(i).price + '</span>\
                                 <button></button>\
                                 <button></button>\
                             </div>\
                         ');
-                        console.log($item[0]);
+//                        console.log($item[0]);
+                        // todo 购买与预览功能
+
                         $(shop).append($item);// todo
-//
                     }
-                })
+                }
+
+                biker.select(['*', 'id>0'], function (result) {
+                    console.log("查询结果数量|角色：" + result.rows.length);
+                    load_item(result);
+                });
+
+                shopScene.bind("loadMotoItem", function () {
+                    moto.select(['*', 'id>0'], function (result) {
+                        console.log("查询结果数量|车身：" + result.rows.length);
+                        load_item(result);
+                    });
+                });
+                shopScene.bind("loadBikerItem", function () {
+                    biker.select(['*', 'id>0'], function (result) {
+                        console.log("查询结果数量|角色：" + result.rows.length);
+                        load_item(result);
+                    });
+                });
+                shopScene.bind("loadEngineItem", function () {
+                    engine.select(['*', 'id>0'], function (result) {
+                        console.log("查询结果数量|引擎：" + result.rows.length);
+                        load_item(result);
+                    });
+                });
+                shopScene.bind("loadWheelItem", function () {
+                    wheel.select(['*', 'id>0'], function (result) {
+                        console.log("查询结果数量|车轮：" + result.rows.length);
+                        load_item(result);
+                    });
+                });
+                shopScene.bind("returnToMain", function () {
+                    director.runScene(mainScene);
+                });
+
+
+                // todo 用户预览信息载入
+//                $(review).children("h1").html()
             });
 
 //            shopScene.bind("finishShopping", function(){
 //                director.runScene(mainScene);
 //            });
-//            mainScene.bind("clickPlayButton", function(){
-//                director.runScene(stageScene);
-//            });
+
+            mainScene.bind("clickPlayButton", function () {
+                director.runScene(stageScene);
+            });
+
 //            stageScene.bind("chooseStage", function(){
 //                director.runScene(readyScene);
 //            });
@@ -211,8 +250,6 @@
 //            rankScene.bind("clickNextButton", function(){
 //                director.runScene(rankScene);
 //            });
-
-
         })
     </script>
 </head>

@@ -4,8 +4,101 @@
     <meta charset="UTF-8">
     <title></title>
     <link href="app/static/css/index.css" rel="stylesheet">
-
+    <script src="app/static/js/jquery-1.12.0.min.js"></script>
 </head>
+<script>
+    $(function () {
+        $("img[src='app/static/img/right.png']").click(function () {
+            var $middle = $("._middleStage");
+            var $left = $("._leftStage");
+            var $right = $("._rightStage");
+            var num = $middle.attr("data-mark");
+            var n1 = (num - 2) > 0 ? num - 2 : num - 2 + 8;
+            var $new_left = $("img[data-mark=" + n1 + "]");
+            if ($("img:animated").length == 0) {
+                $right.animate({
+                    'height': '275px',
+                    'position': 'absolute',
+                    'top': '62px',
+                    'left': '31%',
+                    'z-index': '5'
+                }).hide();
+                $middle.animate({
+                    'height': '275px',
+                    'position': 'absolute',
+                    'top': '62px',
+                    'left': '49%',
+                    'z-index': '5'
+                });
+                $left.animate({
+                    'height': '399px',
+                    'top': '0',
+                    'left': '21%',
+                    'position': 'absolute',
+                    'z-index': '10'
+                });
+                $new_left.show().animate({
+                    'height': '275px',
+                    'position': 'absolute',
+                    'top': '62px',
+                    'left': '13%',
+                    'z-index': '5'
+                });
+                $new_left.attr("class", "_leftStage");
+                $left.attr("class", "_middleStage");
+                $right.attr("class", "_backStage");
+                $middle.attr("class", "_rightStage");
+            }
+        });
+
+        $("img[src='app/static/img/left.png']").click(function () {
+            var $middle = $("._middleStage");
+            var $left = $("._leftStage");
+            var $right = $("._rightStage");
+            var num = $middle.attr("data-mark");
+            var n2 = (Number(num) + 2) <= 8 ? Number(num) + 2 : Number(num) + 2 - 8;
+            console.log(num+" "+n2);
+            var $new_right = $("img[data-mark=" + n2 + "]");
+            if ($("img:animated").length == 0) {
+                $right.animate({
+                    'height': '399px',
+                    'top': '0',
+                    'left': '21%',
+                    'position': 'absolute',
+                    'z-index': '10'
+//
+                });
+                $middle.animate({
+                    'height': '275px',
+                    'position': 'absolute',
+                    'top': '62px',
+                    'left': '13%',
+                    'z-index': '5'
+//
+                });
+                $left.animate({
+                    'height': '275px',
+                    'position': 'absolute',
+                    'top': '62px',
+                    'left': '31%',
+                    'z-index': '5'
+                }).hide();
+                $new_right.show().animate({
+                    'height': '275px',
+                    'position': 'absolute',
+                    'top': '62px',
+                    'left': '49%',
+                    'z-index': '5'
+                });
+
+                $new_right.attr("class", "_rightStage");
+                $left.attr("class", "_backStage");
+                $right.attr("class", "_middleStage");
+                $middle.attr("class", "_leftStage");
+            }
+        })
+    })
+</script>
 <body>
 <div id="_scene" style="width: 100%; height: 100%">
     <div id="_stage">
@@ -13,11 +106,16 @@
         <div id="_stage_box">
             <div id="_stage_box_empty"></div>
             <div id="_stage_box_stage">
-                <img src="app/static/img/stage/WorldThumbnails1.png" />
-                <img src="app/static/img/stage/WorldThumbnails2.png" />
-                <img src="app/static/img/stage/WorldThumbnails3.png" />
-                <img src="app/static/img/right.png" />
-                <img src="app/static/img/left.png" />
+                <img src="app/static/img/right.png"/>
+                <img src="app/static/img/left.png"/>
+                <img src="app/static/img/stage/WorldThumbnails1.png" class="_leftStage" data-mark="1"/>
+                <img src="app/static/img/stage/WorldThumbnails2.png" class="_middleStage" data-mark="2"/>
+                <img src="app/static/img/stage/WorldThumbnails3.png" class="_rightStage" data-mark="3"/>
+                <img src="app/static/img/stage/WorldThumbnails4.png" class="_backStage" data-mark="4"/>
+                <img src="app/static/img/stage/WorldThumbnails5.png" class="_backStage" data-mark="5"/>
+                <img src="app/static/img/stage/WorldThumbnails6.png" class="_backStage" data-mark="6"/>
+                <img src="app/static/img/stage/WorldThumbnails7.png" class="_backStage" data-mark="7"/>
+                <img src="app/static/img/stage/WorldThumbnails8.png" class="_backStage" data-mark="8"/>
             </div>
         </div>
     </div>

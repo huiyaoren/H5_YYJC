@@ -131,10 +131,13 @@ function TB_Biker(db) {
     var self = this;
     this.table_name = 'tb_Biker';
     this.table_attr = {
-        'role_id': 'integer primary key',
+        'id': 'integer primary key',
         'skill': 'text',
         'name': 'text',
-        'price':'integer'
+        'price':'integer',
+        'img_1':'text',
+        'img_2':'text',
+        'img_3':'text'
     };
 
     // 查询
@@ -183,10 +186,23 @@ function TB_Moto(db) {
     var self = this;
     this.table_name = 'tb_Moto';
     this.table_attr = {
-        'moto_id': 'integer primary key',
+        'id': 'integer primary key',
         'max_speed': 'integer',
         'name':'text',
-        'price':'integer'
+        'price':'integer',
+        'img_1':'text',
+        'img_2':'text'
+    };
+
+    // 查询
+    this.select = function (data, fn) {
+        var sql = "\
+            select " + data[0] + " from " + this.table_name + "\
+            where " + data[1] + "\
+        ";
+        execute_sql(db, sql, null, function (result) {
+            fn(result)
+        });
     };
 
     // 插入 数据
@@ -224,10 +240,23 @@ function TB_Wheel(db) {
     var self = this;
     this.table_name = 'tb_Wheel';
     this.table_attr = {
-        'wheel_id': 'integer primary key',
+        'id': 'integer primary key',
         'turning_speed': 'integer',
         'name':'text',
-        'price':'integer'
+        'price':'integer',
+        'img_1':'text',
+        'img_2':'text'
+    };
+
+    // 查询
+    this.select = function (data, fn) {
+        var sql = "\
+            select " + data[0] + " from " + this.table_name + "\
+            where " + data[1] + "\
+        ";
+        execute_sql(db, sql, null, function (result) {
+            fn(result)
+        });
     };
 
     // 插入 数据
@@ -265,10 +294,22 @@ function TB_Engine(db) {
     var self = this;
     this.table_name = 'tb_Engine';
     this.table_attr = {
-        'engine_id': 'integer primary key',
+        'id': 'integer primary key',
         'acceleration': 'integer',
         'name':'text',
-        'price':'integer'
+        'price':'integer',
+        'img_1':'text'
+    };
+
+    // 查询
+    this.select = function (data, fn) {
+        var sql = "\
+            select " + data[0] + " from " + this.table_name + "\
+            where " + data[1] + "\
+        ";
+        execute_sql(db, sql, null, function (result) {
+            fn(result)
+        });
     };
 
     // 插入 数据

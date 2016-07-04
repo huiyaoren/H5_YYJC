@@ -78,11 +78,10 @@ function LoginScene() {
 
         // 登陆
         $(_login_center_box).children("img:eq(2)").click(function () {
-            if($form.valid()){
+            if ($form.valid()) {
                 $(document.body).trigger("loginCorrect", $form);
                 $me = $("<div id='_login'></div>");
             }
-
         });
     }
 }
@@ -164,7 +163,7 @@ function SignScene() {
 
         // 点击 注册按钮
         $(_sign_center_box).children("img:eq(3)").click(function () {
-            if($("#signForm").valid()){
+            if ($("#signForm").valid()) {
                 $(document.body).trigger("signSuccess", $form);
                 $me = $("<div id='_sign'></div>");
             }
@@ -211,9 +210,12 @@ function MainScene() {
     };
 
     this.run = function () {
-        timer = setInterval(function () {
-            if ($(_main_loading_box).children("meter")[0].value < 100) {
 
+        var count = 0;
+        timer = setInterval(function () {
+            if (count < 99) {
+
+                count +=1;
                 $(_main_loading_box).children("meter")[0].value += 1;
 
                 var left = Number(
@@ -228,21 +230,33 @@ function MainScene() {
 
                 // todo 轮子转动动画
             }
-            else {
+            else if(count >= 99) {
+                console.log(count);
+
                 clearInterval(timer);
                 $(_main_loading).remove();
-            }
-        }, 20);
+                $me = $("<div id='_main'></div>");
 
-        //点击 返回按钮
+            }
+        }, 10);
+
+
+        //点击 返回
         $(_main_up).children("button:eq(0)").click(function () {
             $(document.body).trigger("returnToLogin1");
             $me = $("<div id='_main'></div>")
         });
 
-        // todo 商店入口
+        //点击 开始
+        $(_main_down).children("button:eq(0)").click(function () {
+            $(document.body).trigger("clickPlayButton");
+            $me = $("<div id='_main'></div>")
+        });
+
+        //  商店入口
         $(_main_down).children("button:eq(2)").click(function () {
             $(document.body).trigger("clickShopButton");
+            $me = $("<div id='_main'></div>")
         });
     }
 
@@ -328,15 +342,19 @@ function StageScene() {
         $me.append('\
             <button></button>\
             <div id="_stage_box">\
-                <div id="_stage_box_empty"></div>\
-                    <div id="_stage_box_stage">\
-                        <img src="app/static/img/stage/WorldThumbnails1.png" />\
-                        <img src="app/static/img/stage/WorldThumbnails2.png" />\
-                        <img src="app/static/img/stage/WorldThumbnails3.png" />\
-                        <img src="app/static/img/right.png" />\
-                        <img src="app/static/img/left.png" />\
-                    </div>\
-                </div>\
+            <div id="_stage_box_empty"></div>\
+            <div id="_stage_box_stage">\
+            <img src="app/static/img/right.png"/>\
+            <img src="app/static/img/left.png"/>\
+            <img src="app/static/img/stage/WorldThumbnails1.png" class="_leftStage" data-mark="1"/>\
+            <img src="app/static/img/stage/WorldThumbnails2.png" class="_middleStage" data-mark="2"/>\
+            <img src="app/static/img/stage/WorldThumbnails3.png" class="_rightStage" data-mark="3"/>\
+            <img src="app/static/img/stage/WorldThumbnails4.png" class="_backStage" data-mark="4"/>\
+            <img src="app/static/img/stage/WorldThumbnails5.png" class="_backStage" data-mark="5"/>\
+            <img src="app/static/img/stage/WorldThumbnails6.png" class="_backStage" data-mark="6"/>\
+            <img src="app/static/img/stage/WorldThumbnails7.png" class="_backStage" data-mark="7"/>\
+            <img src="app/static/img/stage/WorldThumbnails8.png" class="_backStage" data-mark="8"/>\
+            </div>\
             </div>\
         ')
     };
@@ -345,7 +363,98 @@ function StageScene() {
     };
 
     this.run = function () {
+        //  右切换按钮点击事件
+        $("img[src='app/static/img/right.png']").click(function () {
+            var $middle = $("._middleStage");
+            var $left = $("._leftStage");
+            var $right = $("._rightStage");
+            var num = $middle.attr("data-mark");
+            var n1 = (num - 2) > 0 ? num - 2 : num - 2 + 8;
+            var $new_left = $("img[data-mark=" + n1 + "]");
+            if ($("img:animated").length == 0) {
+                $right.animate({
+                    'height': '275px',
+                    'position': 'absolute',
+                    'top': '62px',
+                    'left': '31%',
+                    'z-index': '5'
+                }).hide();
+                $middle.animate({
+                    'height': '275px',
+                    'position': 'absolute',
+                    'top': '62px',
+                    'left': '49%',
+                    'z-index': '5'
+                });
+                $left.animate({
+                    'height': '399px',
+                    'top': '0',
+                    'left': '21%',
+                    'position': 'absolute',
+                    'z-index': '10'
+                });
+                $new_left.show().animate({
+                    'height': '275px',
+                    'position': 'absolute',
+                    'top': '62px',
+                    'left': '13%',
+                    'z-index': '5'
+                });
+                $new_left.attr("class", "_leftStage");
+                $left.attr("class", "_middleStage");
+                $right.attr("class", "_backStage");
+                $middle.attr("class", "_rightStage");
+            }
+        });
 
+        $("img[src='app/static/img/left.png']").click(function () {
+            var $middle = $("._middleStage");
+            var $left = $("._leftStage");
+            var $right = $("._rightStage");
+            var num = $middle.attr("data-mark");
+            var n2 = (Number(num) + 2) <= 8 ? Number(num) + 2 : Number(num) + 2 - 8;
+            console.log(num+" "+n2);
+            var $new_right = $("img[data-mark=" + n2 + "]");
+            if ($("img:animated").length == 0) {
+                $right.animate({
+                    'height': '399px',
+                    'top': '0',
+                    'left': '21%',
+                    'position': 'absolute',
+                    'z-index': '10'
+//
+                });
+                $middle.animate({
+                    'height': '275px',
+                    'position': 'absolute',
+                    'top': '62px',
+                    'left': '13%',
+                    'z-index': '5'
+//
+                });
+                $left.animate({
+                    'height': '275px',
+                    'position': 'absolute',
+                    'top': '62px',
+                    'left': '31%',
+                    'z-index': '5'
+                }).hide();
+                $new_right.show().animate({
+                    'height': '275px',
+                    'position': 'absolute',
+                    'top': '62px',
+                    'left': '49%',
+                    'z-index': '5'
+                });
+
+                $new_right.attr("class", "_rightStage");
+                $left.attr("class", "_backStage");
+                $right.attr("class", "_middleStage");
+                $middle.attr("class", "_leftStage");
+            }
+        });
+
+        // todo 返回按钮
     }
 }
 
@@ -363,19 +472,20 @@ function ShopScene() {
         <div id="_shop_empty"></div>\
             <div id="_shop_box">\
                 <div id="_shop_box_preview">\
-                <img src="app/static/img/effectShow.png">\
-                <h1>Null</h1>\
-                <div></div>\
-                <span>我的金币：999999</span>\
-                <button></button>\
-                <button></button>\
-            </div>\
+                    <img src="app/static/img/effectShow.png">\
+                    <h1>Null</h1>\
+                    <div></div>\
+                    <span>我的金币：999999</span>\
+                    <button></button>\
+                    <button></button>\
+                </div>\
             <div id="_shop_box_shop">\
                 <img src="app/static/img/store.png">\
                 <img src="app/static/img/item1.png">\
                 <img src="app/static/img/item5.png">\
                 <img src="app/static/img/item6.png">\
                 <img src="app/static/img/item7.png">\
+                <img src="app/static/img/exit.png">\
                 <div>\
                     <div>\
                         <div class="_shopItem">\
@@ -396,8 +506,52 @@ function ShopScene() {
     };
 
     this.run = function () {
-        // todo
-        $(document.body).trigger("LoadShop", $("#_shop_box_shop").children("div").children("div"))
+        var $shop = $("#_shop_box_shop");
+        var $preview = $("#_shop_box_preview");
+
+        $(document.body).trigger("LoadShop", $shop.children("div").children("div"), $preview);
+
+
+        // todo 点击后重设按钮样式
+        $shop.children("img:gt(0):lt(4)").click(function () {
+
+            //alert(23)
+
+            $($shop.children("img:gt(0):lt(4)"))
+                .css("background-image", "none")
+                .css("border", "none");
+
+            $(this)
+                .css("background-image", "url(app/static/img/login_box.png)")
+                .css("background-size", "100% 100%")
+                .css("border", "solid 2px black");
+
+        });
+
+        $shop.children("img:eq(1)").click(function () {
+            $(document.body).trigger("loadBikerItem");
+        });
+
+        $shop.children("img:eq(2)").click(function () {
+            $(document.body).trigger("loadMotoItem");
+        });
+
+        $shop.children("img:eq(3)").click(function () {
+            $(document.body).trigger("loadWheelItem");
+        });
+
+        $shop.children("img:eq(4)").click(function () {
+            $(document.body).trigger("loadEngineItem");
+        });
+
+        $shop.children("img:eq(5)").click(function () {
+            $(document.body).trigger("returnToMain");
+            $me = $("<div id='_shop'></div>")
+        });
+        $me = $("<div id='_shop'></div>")
+
+
+
     }
 }
 
