@@ -140,6 +140,12 @@ function TB_Biker(db) {
         'img_3':'text'
     };
 
+    // 修改 数据
+    this.update = function (data) {
+        var sql = "update " + this.table_name + " set " + data[0] + " where " + data[1];
+        execute_sql(db, sql);
+    };
+
     // 查询
     this.select = function (data, fn) {
         var sql = "\

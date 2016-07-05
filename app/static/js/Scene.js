@@ -238,7 +238,7 @@ function MainScene() {
                 $me = $("<div id='_main'></div>");
 
             }
-        }, 10);
+        }, 1);
 
 
         //点击 返回
@@ -250,6 +250,12 @@ function MainScene() {
         //点击 开始
         $(_main_down).children("button:eq(0)").click(function () {
             $(document.body).trigger("clickPlayButton");
+            $me = $("<div id='_main'></div>")
+        });
+
+        //点击 开始
+        $(_main_down).children("button:eq(1)").click(function () {
+            $(document.body).trigger("clickStorageButton");
             $me = $("<div id='_main'></div>")
         });
 
@@ -509,7 +515,7 @@ function ShopScene() {
         var $shop = $("#_shop_box_shop");
         var $preview = $("#_shop_box_preview");
 
-        $(document.body).trigger("LoadShop", $shop.children("div").children("div"), $preview);
+        $(document.body).trigger("LoadShop", [$shop.children("div").children("div"), $preview]);
 
 
         // todo 点击后重设按钮样式
@@ -545,9 +551,15 @@ function ShopScene() {
         });
 
         $shop.children("img:eq(5)").click(function () {
-            $(document.body).trigger("returnToMain");
+            $(document.body).trigger("returnToMain");//todo
             $me = $("<div id='_shop'></div>")
         });
+
+        $preview.children("button:eq(0)").click(function(){
+            $(document.body).trigger("goToStorage");//todo
+
+        });
+
         $me = $("<div id='_shop'></div>")
 
 
@@ -596,6 +608,111 @@ function ResultScene() {
 
     this.run = function () {
 
+    }
+}
+
+// 仓库
+function RepertorytScene() {
+    var self = this;
+    var $me = $("<div id='_repertory'></div>");
+
+    this.mainBody = function () {
+        this.createUI();
+        return $me
+    };
+    this.createUI = function () {
+        $me.append('\
+        <div id="_repertory_empty"></div>\
+            <div id="_repertory_box">\
+            <div id="_repertory_box_preview">\
+            <img src="app/static/img/effectShow.png">\
+            <div></div>\
+            <span>加速性能：999999</span>\
+        <span>最大速度：999999</span>\
+        <span>转向扭矩：999999</span>\
+        <span>技能：999999</span>\
+        <button></button>\
+        </div>\
+        <div id="_repertory_box_shop">\
+            <img src="app/static/img/entrepot.png">\
+            <img src="app/static/img/item1.png">\
+            <img src="app/static/img/item5.png">\
+            <img src="app/static/img/item6.png">\
+            <img src="app/static/img/item7.png">\
+            <div>\
+            <div>\
+            <div class="_shopItem">\
+            <h2>商品名称</h2>\
+            <img src="app/static/img/biker/c1s.png">\
+            <span>价格：9999</span>\
+        <button></button>\
+        <button></button>\
+        </div>\
+        </div>\
+        </div>\
+        </div>\
+        </div>\
+        ')
+    };
+    this.bind = function (eventName, eventFn) {
+        $(document.body).on(eventName, eventFn)
+    };
+
+    this.run = function () {
+        var $shop = $("#_repertory_box_shop");
+        var $preview = $("#_repertory_box_preview");
+
+
+
+        $shop.children("img:gt(0):lt(4)").click(function () {
+
+            //alert(23)
+
+            $($shop.children("img:gt(0):lt(4)"))
+                .css("background-image", "none")
+                .css("border", "none");
+
+            $(this)
+                .css("background-image", "url(app/static/img/login_box.png)")
+                .css("background-size", "100% 100%")
+                .css("border", "solid 2px black");
+
+        });
+
+
+
+        // 载入
+        $("#_repertory_box_shop >img:eq(1)").load(function(){
+            $shop.children("div").children("div").empty();
+            console.log($preview);
+            $(document.body).trigger("loadStorage", [$shop.children("div").children("div"), $preview]);
+            $me = $("<div id='_repertory'></div>");
+        });
+
+        $("#_repertory_box_preview > button").click(function(){
+            $(document.body).trigger("returnToMain_2");
+            $me = $("<div id='_repertory'></div>");
+        });
+
+        $("#_repertory_box_shop >img:eq(1)").click(function(){
+            $(document.body).trigger("loadUserRole");
+            $me = $("<div id='_repertory'></div>");
+        });
+
+        $("#_repertory_box_shop >img:eq(2)").click(function(){
+            $(document.body).trigger("loadUserMoto");
+            $me = $("<div id='_repertory'></div>");
+        });
+
+        $("#_repertory_box_shop >img:eq(3)").click(function(){
+            $(document.body).trigger("loadUserWheel");
+            $me = $("<div id='_repertory'></div>");
+        });
+
+        $("#_repertory_box_shop >img:eq(4)").click(function(){
+            $(document.body).trigger("loadUserEngine");
+            $me = $("<div id='_repertory'></div>");
+        });
     }
 }
 

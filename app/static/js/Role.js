@@ -33,7 +33,8 @@ function Role(imgList, div) {
             .attr("src", imgList[0])
             .css({
                 position: "absolute",
-                "z-index": 0
+                "z-index": 0,
+                "left":"0"
             })
             .appendTo($box);
         $("<img />")
@@ -42,7 +43,7 @@ function Role(imgList, div) {
                 position: "absolute",
                 left: "36px",
                 top: "-55px",
-                "z-index": 1
+                "z-index": 2
             })
             .appendTo($box);
         $("<img />")
@@ -52,7 +53,7 @@ function Role(imgList, div) {
                 position: "absolute",
                 right: "-10px",
                 top: "25px",
-                "z-index": -1
+                "z-index": 1
             })
             .appendTo($box);
         $("<img />")
@@ -63,7 +64,7 @@ function Role(imgList, div) {
                 position: "absolute",
                 left: "-10px",
                 top: "25px",
-                "z-index": -1
+                "z-index": 1
             })
             .appendTo($box);
         $(div).append($box)
