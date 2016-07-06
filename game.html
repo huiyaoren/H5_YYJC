@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="app/static/js/jquery-1.12.0.min.js"></script>
+    <script src="app/static/js/jquery-1.12.0.min.js"></script>
+    <script src="app/static/js/Director.js"></script>
+    <script src="app/static/js/Scene.js"></script>
+    <script src="app/static/js/Role.js"></script>
+    <script src="app/static/js/Database.js"></script>
+    <script src="app/static/js/jquery.validate.js"></script>
+    <script src="app/static/js/messages_zh.js"></script>
+    <script src="app/static/js/Controller.js"></script>
+    <script src="app/static/js/Speedometer.js"></script>
+    <script src="app/static/js/Role.js"></script>
+    <script src="app/static/js/Map.js"></script>
+    <link href="app/static/css/index.css" rel="stylesheet">
+
+    <style>
+
+    </style>
+    <script>
+        $(function () {
+
+
+            var cnt = new Controller($("#cont_div")[0], 50, 20);
+            var meter = new Speedometer(meterBox);
+            var role = new Role([
+                "app/static/img/moto/m2.png",
+                "app/static/img/biker/c6.png",
+                "app/static/img/wheel/w2.png"
+            ], scene_div);
+            var road = new Road("app/static/img/map2.jpg", $("#road"));
+
+            road.run();
+            role.run();
+            cnt.run();
+            meter.run();
+            role.move(150, 350);
+
+            meter.bind("speedChange", function () {
+
+                var acc = cnt.acc()[0] <= 0 ? -0.5 : cnt.acc()[0] / 10;
+                meter.meter.value += acc;
+//                $("h1").html("加速度：" + (acc).toFixed(2) + "/10ms，速度：" + (meter.meter.value).toFixed(2));
+                road.move(meter.meter.value / 5);
+                role.move(meter.meter.value / 5, cnt.acc()[1]);
+                role.roll(meter.meter.value)
+            });
+        });
+
+
+    </script>
+</head>
+<body>
+<div id="_scene" style="width: 100%; height: 100%">
+    <div id="_game">
+        <div id="_game_rank">
+            <div></div>
+        </div>
+        <div id="_game_timer">
+            <span>1-1</span>
+            <span>00:00</span>
+        </div>
+        <div id="_game_coin">
+            <span>+262</span>
+        </div>
+        <div id="_game_speedometer">
+            <div></div>
+        </div>
+        <button id="_game_stop"></button>
+
+
+        <h1>加速度上限 1/100ms， 速度上限 100</h1>
+        <meter id="meterBox" value="0" min="0" max="100"></meter>
+        <div id="cont_div">
+            <div draggable="true"></div>
+            <canvas width="100px" height="100px" id="controller"></canvas>
+            <span></span>
+        </div>
+        <div id="road">
+            <div id="scene_div"></div>
+        </div>
+        <div id="_countdown">
+            <div id="_countdown_empty"></div>
+            <div id="_countdown_body">
+                <span>倒计时</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

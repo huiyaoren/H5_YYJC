@@ -9,7 +9,7 @@ function Speedometer(meterBox) {
         timer = setInterval(function () {
             $(meterBox).trigger("speedChange");
 //                        console.log(acc)
-        }, 20);
+        }, 20);// todo 20
 //                meterBox.value += acc[1]
     };
     this.bind = function (eventName, eventFn) {

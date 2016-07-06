@@ -215,7 +215,7 @@ function MainScene() {
         timer = setInterval(function () {
             if (count < 99) {
 
-                count +=1;
+                count += 1;
                 $(_main_loading_box).children("meter")[0].value += 1;
 
                 var left = Number(
@@ -230,7 +230,7 @@ function MainScene() {
 
                 // todo 轮子转动动画
             }
-            else if(count >= 99) {
+            else if (count >= 99) {
                 console.log(count);
 
                 clearInterval(timer);
@@ -283,42 +283,43 @@ function MapScene() {
             <div id="_map_empty"></div>\
             <div id="_map_box">\
             <div id="_map_box_map">\
-            <div class="_map1">\
-            <img src="app/static/img/bigStar0.png">\
-            </div>\
-            <div class="_map2">\
+            <div class="_map1" data-map="1">\
             <img src="app/static/img/bigStar0.png">\
             <img src="app/static/img/locked.png">\
             </div>\
-            <div class="_map3">\
+            <div class="_map2" data-map="2">\
             <img src="app/static/img/bigStar0.png">\
             <img src="app/static/img/locked.png">\
             </div>\
-            <div class="_map4">\
+            <div class="_map3" data-map="3">\
             <img src="app/static/img/bigStar0.png">\
             <img src="app/static/img/locked.png">\
             </div>\
-            <div class="_map5">\
+            <div class="_map4" data-map="4">\
             <img src="app/static/img/bigStar0.png">\
             <img src="app/static/img/locked.png">\
             </div>\
-            <div class="_map6">\
+            <div class="_map5" data-map="5">\
             <img src="app/static/img/bigStar0.png">\
             <img src="app/static/img/locked.png">\
             </div>\
-            <div class="_map7">\
+            <div class="_map6" data-map="6">\
             <img src="app/static/img/bigStar0.png">\
             <img src="app/static/img/locked.png">\
             </div>\
-            <div class="_map8">\
+            <div class="_map7" data-map="7">\
             <img src="app/static/img/bigStar0.png">\
             <img src="app/static/img/locked.png">\
             </div>\
-            <div class="_map9">\
+            <div class="_map8" data-map="8">\
             <img src="app/static/img/bigStar0.png">\
             <img src="app/static/img/locked.png">\
             </div>\
-            <div class="_map10">\
+            <div class="_map9" data-map="9">\
+            <img src="app/static/img/bigStar0.png">\
+            <img src="app/static/img/locked.png">\
+            </div>\
+            <div class="_map10" data-map="10">\
             <img src="app/static/img/bigStar0.png">\
             <img src="app/static/img/locked.png">\
             </div>\
@@ -331,7 +332,25 @@ function MapScene() {
     };
 
     this.run = function () {
+        $me = $("<div id='_map'></div>");
 
+        $("img:eq(0)").load(function () {
+            $(document.body).trigger("loadMapScene", $("#_map_box_map"))
+        });
+
+        $("#_map_box_map").children().click(function () {
+            if ($(this).children("img:eq(1):visible").length == 0) {
+                alert();
+                var map_num = $(this).attr("data-map");
+                $(document.body).trigger("clickMap", [$("#_map_box_map"), map_num])
+            } else {
+                alert("关卡未解锁")
+            }
+        });
+
+        $("#_map").children("button").click(function () {
+            $(document.body).trigger("returnToStage")
+        })
     }
 }
 
@@ -369,6 +388,8 @@ function StageScene() {
     };
 
     this.run = function () {
+        $me = $("<div id='_stage'></div>");
+
         //  右切换按钮点击事件
         $("img[src='app/static/img/right.png']").click(function () {
             var $middle = $("._middleStage");
@@ -419,8 +440,10 @@ function StageScene() {
             var $right = $("._rightStage");
             var num = $middle.attr("data-mark");
             var n2 = (Number(num) + 2) <= 8 ? Number(num) + 2 : Number(num) + 2 - 8;
-            console.log(num+" "+n2);
+            //console.log(num + " " + n2);
             var $new_right = $("img[data-mark=" + n2 + "]");
+
+
             if ($("img:animated").length == 0) {
                 $right.animate({
                     'height': '399px',
@@ -460,7 +483,22 @@ function StageScene() {
             }
         });
 
-        // todo 返回按钮
+        // 返回按钮
+        $("#_stage >button").click(function () {
+            $(document.body).trigger("returnToMain_3")
+        });
+
+        // 选择赛段
+        $("[class*=Stage]").click(function () {
+
+            // 判断是否为中间图片
+            if ($(this).attr("class") == "_middleStage") {
+                $(document.body).trigger("chooseStage", $(this).attr("data-mark"));
+                // todo localStorage !!!
+            }
+        })
+
+
     }
 }
 
@@ -555,13 +593,12 @@ function ShopScene() {
             $me = $("<div id='_shop'></div>")
         });
 
-        $preview.children("button:eq(0)").click(function(){
+        $preview.children("button:eq(0)").click(function () {
             $(document.body).trigger("goToStorage");//todo
 
         });
 
         $me = $("<div id='_shop'></div>")
-
 
 
     }
@@ -663,7 +700,6 @@ function RepertorytScene() {
         var $preview = $("#_repertory_box_preview");
 
 
-
         $shop.children("img:gt(0):lt(4)").click(function () {
 
             //alert(23)
@@ -680,36 +716,35 @@ function RepertorytScene() {
         });
 
 
-
         // 载入
-        $("#_repertory_box_shop >img:eq(1)").load(function(){
+        $("#_repertory_box_shop >img:eq(1)").load(function () {
             $shop.children("div").children("div").empty();
             console.log($preview);
             $(document.body).trigger("loadStorage", [$shop.children("div").children("div"), $preview]);
             $me = $("<div id='_repertory'></div>");
         });
 
-        $("#_repertory_box_preview > button").click(function(){
+        $("#_repertory_box_preview > button").click(function () {
             $(document.body).trigger("returnToMain_2");
             $me = $("<div id='_repertory'></div>");
         });
 
-        $("#_repertory_box_shop >img:eq(1)").click(function(){
+        $("#_repertory_box_shop >img:eq(1)").click(function () {
             $(document.body).trigger("loadUserRole");
             $me = $("<div id='_repertory'></div>");
         });
 
-        $("#_repertory_box_shop >img:eq(2)").click(function(){
+        $("#_repertory_box_shop >img:eq(2)").click(function () {
             $(document.body).trigger("loadUserMoto");
             $me = $("<div id='_repertory'></div>");
         });
 
-        $("#_repertory_box_shop >img:eq(3)").click(function(){
+        $("#_repertory_box_shop >img:eq(3)").click(function () {
             $(document.body).trigger("loadUserWheel");
             $me = $("<div id='_repertory'></div>");
         });
 
-        $("#_repertory_box_shop >img:eq(4)").click(function(){
+        $("#_repertory_box_shop >img:eq(4)").click(function () {
             $(document.body).trigger("loadUserEngine");
             $me = $("<div id='_repertory'></div>");
         });
@@ -719,46 +754,110 @@ function RepertorytScene() {
 // todo 游戏界面
 function GameScene() {
     var self = this;
-    var $me = $("<div class='_game'></div>");
+    var $me = $("<div id='_game'></div>");
 
     this.mainBody = function () {
         $me
-            .append("<h1>加速度上限 1/100ms， 速度上限 100</h1>")
-            .append("<meter id='_meterBox' value='0' min='0' max='100'></meter>")
-            .append(
-            "<div id='_cont_div'>\
-                <div draggable='true'></div>\
-                <canvas width='100px' height='100px' id='controller'></canvas>\
-                <span></span>\
-            </div>")
-            .append("<div id='_map'><div id='_map_div'></div></div>");
+            .append('\
+            <div id="_game_rank">\
+            <div></div>\
+            </div>\
+            <div id="_game_timer">\
+            <span>1-1</span>\
+            <span>00:00</span>\
+        </div>\
+        <div id="_game_coin">\
+            <span>+262</span>\
+            </div>\
+            <div id="_game_speedometer">\
+            <div></div>\
+            </div>\
+            <button id="_game_stop"></button>\
+            <h1>加速度上限 1/100ms， 速度上限 100</h1>\
+        <meter id="meterBox" value="0" min="0" max="100"></meter>\
+            <div id="cont_div">\
+            <div draggable="true"></div>\
+            <canvas width="100px" height="100px" id="controller"></canvas>\
+            <span></span>\
+            </div>\
+            <div id="road">\
+            <div id="scene_div"></div>\
+            </div>\
+            <div id="_countdown">\
+            <div id="_countdown_empty"></div>\
+            <div id="_countdown_body">\
+            <span></span>\
+            </div>\
+            </div>\
+            ');
         return $me
     };
 
     this.run = function () {
-
-        var cnt = new Controller(_cont_div);
-        var meter = new Speedometer(_meterBox);
-        var road = new Map("app/static/img/map2.jpg", _map);
+        var cnt = new Controller($("#cont_div")[0], 50, 20);
+        var meter = new Speedometer(meterBox);
         var role = new Role([
             "app/static/img/moto/m2.png",
             "app/static/img/biker/c6.png",
             "app/static/img/wheel/w2.png"
-        ], _map_div);
-
+        ], scene_div);
+        var role_1 = new Role([
+            "app/static/img/moto/m2.png",
+            "app/static/img/biker/c6.png",
+            "app/static/img/wheel/w2.png"
+        ], scene_div);
+        var road = new Road("app/static/img/map2.jpg", $("#road"));
 
         road.run();
         role.run();
+        role_1.run();
         cnt.run();
         meter.run();
         role.move(150, 350);
-        meter.bind("speedChange", function () {
-            var acc = cnt.acc()[0] <= 0 ? -0.5 : cnt.acc()[0] / 10;
-            meter.meter.value += acc;
-            $("h1").html("加速度：" + (acc).toFixed(2) + "/10ms，速度：" + (meter.meter.value).toFixed(2));
-            road.move(meter.meter.value / 5);
-            role.move(meter.meter.value / 5, cnt.acc()[1]);
-            role.roll(meter.meter.value)
-        });
+        role_1.move(150, 200);
+
+        // todo 倒计时 settimeout
+        setTimeout(function () {
+            $("#_countdown_body").children("span").show().empty().html("倒计时");
+        }, 2000);
+        setTimeout(function () {
+            $("#_countdown_body").children("span").empty().html("3");
+        }, 3000);
+        setTimeout(function () {
+            $("#_countdown_body").children("span").empty().html("2");
+        }, 4000);
+        setTimeout(function () {
+            $("#_countdown_body").children("span").empty().html("1");
+        }, 5000);
+        setTimeout(function () {
+            $("#_countdown_body").children("span").empty().hide();
+            game_begin()
+        }, 6000);
+
+        function game_begin() {
+            var speed_1 = 0;
+
+            function begin() {
+                var acc = cnt.acc()[0] <= 0 ? -0.5 : cnt.acc()[0] / 10;
+                meter.meter.value += acc;
+                speed_1 += 0.1;
+//                $("h1").html("加速度：" + (acc).toFixed(2) + "/10ms，速度：" + (meter.meter.value).toFixed(2));
+                road.move(meter.meter.value / 5);
+
+                role.move(meter.meter.value / 5, cnt.acc()[1]);
+                role.roll(meter.meter.value);
+
+                role_1.move(speed_1/5);
+                role_1.roll(speed_1);
+
+            }
+
+            meter.bind("speedChange", function(){
+                begin();
+            });
+        }
+
     }
+
+
 }

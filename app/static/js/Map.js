@@ -1,7 +1,7 @@
 /**
  * Created by wslsh on 2016/6/20.
  */
-function Map(img, div) { // todo 变量名 img 易混淆
+function Road(img, div) { // todo 变量名 img 易混淆
     this.run = function () {
         createUI()
     };

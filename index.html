@@ -77,14 +77,38 @@
             engine.insert([306, 6, '引擎6', 300, 'engine/engine6.png']);
 
 //            user.update(["password=234234", "username=123123"]);
-            user.insert(['werwer', 'werwer', 'werwer', 9999, 99, '[[2,3,4],[102,103],[202,203],[302,303]]', '[2,102,202,302]', '[]']);
+//            var save_list = [
+//                [0, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+//                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+//                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+//                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+//                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+//                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+//                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+//                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+//            ];
+            var save_list = [
+                [0, 1, 1, -1, -1, -1, -1, -1, -1, -1],
+                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+            ];
+
+            user.insert(['sdfsdf', 'sdfsdf', 'sdfsdf', 9999, 99, '[[2,3,4],[102,103],[202,203],[302,303]]', '[2,102,202,302]', JSON.stringify(save_list)]);
 //            user.drop();
+
+            console.log(JSON.parse(JSON.stringify(save_list)));
 
 
 // ---------------------------- -----------------------------------------------
 
-            director.runScene(mainScene);
+            director.runScene(gameScene);
 
+            // 登陆
             loginScene.bind("clickSignButton", function () {
                 director.runScene(signScene);
             });
@@ -99,6 +123,7 @@
                     localStorage.userCoin = result.rows.item(0).coin;
                     localStorage.userOwning = result.rows.item(0).owning_staff;
                     localStorage.userUsing = result.rows.item(0).using_staff;
+                    localStorage.saveData = result.rows.item(0).record;
 //                    console.log(result.rows);
                     console.log("数据匹配用户名数量|登陆: " + result.rows.length);
                     if (result.rows.length == 0) {
@@ -124,6 +149,8 @@
 
             });
 
+
+            // 注册
             signScene.bind("returnToLogin", function () {
                 director.runScene(loginScene);
             });
@@ -159,13 +186,7 @@
             });
 
 
-//            loginScene.bind("clickSettingButton", function(){
-//                director.runScene(settingScene);
-//            });
-//            settingScene.bind("finishSetting", function(){
-//                director.runScene(loginScene);
-//            });
-//
+            // 主界面
             mainScene.bind("clickShopButton", function () {
                 director.runScene(shopScene);
             });
@@ -183,12 +204,12 @@
                 // todo 清空  localstorage
             });
 
+
             // 个人仓库
             repertorytScene.bind("loadStorage", function (e, shop, preview) {
                 var username = localStorage.userOnline;
-//                console.log("活动用户名|仓库：" + username);
-                console.log(shop);
-                // 预览
+                console.log("活动用户名|仓库：" + username);
+
                 function load_preview(fn, fn2) {
 
                     user.select(['*', "username='" + username + "'"], function (result) {
@@ -251,26 +272,26 @@
 
                             var using = eval(localStorage.userUsing);
                             if (item_id < 100) {
-                                using[0]=item_id
+                                using[0] = item_id
                             }
                             else if (item_id < 200) {
-                                using[1]=item_id
+                                using[1] = item_id
                             }
                             else if (item_id < 300) {
-                                using[2]=item_id
+                                using[2] = item_id
                             }
                             else if (item_id < 400) {
-                                using[3]=item_id
+                                using[3] = item_id
                             }
 
                             // 修改用户装备数据
-                            var new_using ="[";
+                            var new_using = "[";
                             for (var n = 0; n < using.length; n++) {
-                                new_using+=using[n]+','
+                                new_using += using[n] + ','
                             }
-                            new_using = new_using.slice(0,-1);
-                            new_using +="]";
-                            user.update(["using_staff= '" + new_using+"'", "username='" + username + "'"])
+                            new_using = new_using.slice(0, -1);
+                            new_using += "]";
+                            user.update(["using_staff= '" + new_using + "'", "username='" + username + "'"])
 
 
                             // 预览角色与装备属性
@@ -392,12 +413,12 @@
 
             });
 
-
             repertorytScene.bind("returnToMain_2", function () {
                 director.runScene(mainScene);
             });
 
 
+            // 商店
             shopScene.bind("LoadShop", function (e, shop, preview) {
 //                alert(); //todo ?? 直接载入不执行 从主界面跳转才执行
                 var username = localStorage.userOnline;
@@ -636,14 +657,69 @@
                 director.runScene(repertorytScene)
             });
 
-//            shopScene.bind("finishShopping", function(){
-//                director.runScene(mainScene);
-//            });
+
+            // 赛事选择
+            stageScene.bind("returnToMain_3", function () {
+                director.runScene(mainScene)
+            });
+            stageScene.bind("chooseStage", function (e, stage_num) {
+                localStorage.stageNum = stage_num;
+                localStorage.saveData_stage = JSON.stringify(JSON.parse(localStorage.saveData)[stage_num - 1]);
+                director.runScene(mapScene)
+            });
 
 
-//            stageScene.bind("chooseStage", function(){
-//                director.runScene(readyScene);
-//            });
+            // 赛段选择
+            mapScene.bind("loadMapScene", function (e, map) {
+
+//                console.log($(map).children());
+                for (var i = 0; i < $(map).children().length; i++) {
+                    $(map).children(":eq(" + i + ")").children("img:eq(1)").hide()
+                }
+
+
+                // 更黄图片 stageNUM
+                $(map).children("div").css("background-image", "url(app/static/img/stage/TrackThumbnails" + localStorage.stageNum + ".png)");
+
+                // 载入锁图片与星 saveData_stage
+                var save_stage = JSON.parse(localStorage.saveData_stage);
+                for (var j = 0; j < save_stage.length; j++) {
+
+                    if (save_stage[j] == -1) {
+                        $(map).children(":eq(" + j + ")").children("img:eq(1)").show()
+                    }
+                    else if (save_stage[j] == 0) {
+                        $(map).children(":eq(" + j + ")").children("img:eq(1)").hide();
+                        $(map).children(":eq(" + j + ")").children("img:eq(0)").attr("src", "app/static/img/bigStar0.png")
+                    }
+                    else if (save_stage[j] == 1) {
+                        $(map).children(":eq(" + j + ")").children("img:eq(1)").hide();
+                        $(map).children(":eq(" + j + ")").children("img:eq(0)").attr("src", "app/static/img/bigStar1.png")
+                    }
+                    else if (save_stage[j] == 2) {
+                        $(map).children(":eq(" + j + ")").children("img:eq(1)").hide();
+                        $(map).children(":eq(" + j + ")").children("img:eq(0)").attr("src", "app/static/img/bigStar2.png")
+                    }
+                    else if (save_stage[j] == 3) {
+                        $(map).children(":eq(" + j + ")").children("img:eq(1)").hide();
+                        $(map).children(":eq(" + j + ")").children("img:eq(0)").attr("src", "app/static/img/bigStar3.png")
+                    }
+
+                }
+
+                // todo 返回按钮
+            });
+
+
+            //todo 事件绑定 or localStorage.mapNum                // todo 跳转至游戏页面
+            mapScene.bind("clickMap", function (e, map, map_num) {
+                localStorage.mapNum = map_num;
+                director.runScene(gameScene);
+            });
+            mapScene.bind("returnToStage", function () {
+                director.runScene(stageScene);
+            });
+
 //            readyScene.bind("startGame", function(){
 //                director.runScene(gameScene);
 //            });
