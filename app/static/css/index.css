@@ -820,7 +820,13 @@ button {
     width: 114px;
     height: 88px;
 }
-
+._userItem>img:nth-child(3){
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    display: none;
+}
 ._userItem > h2 {
     width: 100%;
     font-size: 0;

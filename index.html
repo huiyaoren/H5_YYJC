@@ -96,6 +96,9 @@
 
 //                console.log(form)
                 user.select(['*', "username='" + username + "'"], function (result) {
+                    localStorage.userCoin = result.rows.item(0).coin;
+                    localStorage.userOwning = result.rows.item(0).owning_staff;
+                    localStorage.userUsing = result.rows.item(0).using_staff;
 //                    console.log(result.rows);
                     console.log("数据匹配用户名数量|登陆: " + result.rows.length);
                     if (result.rows.length == 0) {
@@ -185,6 +188,43 @@
                 var username = localStorage.userOnline;
 //                console.log("活动用户名|仓库：" + username);
                 console.log(shop);
+                // 预览
+                function load_preview(fn, fn2) {
+
+                    user.select(['*', "username='" + username + "'"], function (result) {
+                        var using = eval(result.rows.item(0).using_staff);
+                        var user_biker = using[0];
+                        var user_moto = using[1];
+                        var user_wheel = using[2];
+                        var user_engine = using[3];
+
+                        console.log("用户已装备角色列表|仓库：" + user_biker);
+                        console.log("用户已装备车架列表|仓库：" + user_moto);
+                        console.log("用户已装备轮组列表|仓库：" + user_wheel);
+                        console.log("用户已装备引擎列表|仓库：" + user_engine);
+
+                        biker.select(['*', "id='" + user_biker + "'"], function (result_biker) {
+                            moto.select(['*', "id='" + user_moto + "'"], function (result_moto) {
+                                wheel.select(['*', "id='" + user_wheel + "'"], function (result_wheel) {
+                                    var results = [result_biker, result_moto, result_wheel];
+                                    var result_img = [];
+                                    for (var i = 0; i < results.length; i++) {
+                                        var img = results[i].rows.item(0).img_2;
+                                        result_img.push(img);
+                                    }
+                                    fn(result_img);
+                                    if (fn2) {
+                                        engine.select(['*', "id='" + user_engine + "'"], function (result_engine) {
+                                            results.push(result_engine);
+                                            fn2(result, results)
+                                        });
+                                    }
+                                })
+                            })
+
+                        })
+                    });
+                }
 
                 function load_item(result) {
                     for (var i = 0; i < result.rows.length; i++) {
@@ -192,12 +232,69 @@
                             <div class="_userItem" data-id="' + result.rows.item(i).id + '">\
                                 <h2>' + result.rows.item(i).name + '</h2>\
                                 <img src="app/static/img/' + result.rows.item(i).img_1 + '">\
+                                <img src="app/static/img/shopped.png">\
                                 <span>价格：' + result.rows.item(i).price + '</span>\
                                 <button></button>\
                                 <button></button>\
                             </div>\
                         ');
-                        // todo     预览功能
+
+                        // todo     选中功能
+                        $item.click(function () {
+                            var item_id = $(this).attr("data-id");
+
+                            //  显示红勾消失
+                            for (var m = 0; m < $(this).parent().children().length; m++) {
+                                $(this).parent().children(":eq(" + m + ")").children("img:eq(1)").hide();
+                            }
+                            $(this).children("img:eq(1)").show();
+
+                            var using = eval(localStorage.userUsing);
+                            if (item_id < 100) {
+                                using[0]=item_id
+                            }
+                            else if (item_id < 200) {
+                                using[1]=item_id
+                            }
+                            else if (item_id < 300) {
+                                using[2]=item_id
+                            }
+                            else if (item_id < 400) {
+                                using[3]=item_id
+                            }
+
+                            // 修改用户装备数据
+                            var new_using ="[";
+                            for (var n = 0; n < using.length; n++) {
+                                new_using+=using[n]+','
+                            }
+                            new_using = new_using.slice(0,-1);
+                            new_using +="]";
+                            user.update(["using_staff= '" + new_using+"'", "username='" + username + "'"])
+
+
+                            // 预览角色与装备属性
+                            preview.children("div").empty();
+                            load_preview(
+                                    function (result_img) {
+                                        var role = new Role([
+                                            "app/static/img/" + result_img[1],
+                                            "app/static/img/" + result_img[0],
+                                            "app/static/img/" + result_img[2]
+                                        ], preview.children("div"));
+                                        role.run();
+                                        role.move(65, 115);
+                                    },
+                                    function (result, results) {// results [人，车，轮，机]
+                                        console.log(result, results);
+                                        preview.children("span:eq(3)").html("技能: " + results[0].rows.item(0).skill);
+                                        preview.children("span:eq(2)").html("最大速度: " + results[1].rows.item(0).max_speed);
+                                        preview.children("span:eq(1)").html("转向性能: " + results[2].rows.item(0).turning_speed);
+                                        preview.children("span:eq(0)").html("加速性能: " + results[3].rows.item(0).acceleration);
+
+                                    }
+                            );
+                        });
 
                         $(shop).append($item);// todo
                     }
@@ -270,44 +367,8 @@
                 // 载入角色 必须在事件定义后运行
                 $(shop).trigger("loadUserRole");
 
-                // 预览
-                function load_preview(fn, fn2) {
 
-                    user.select(['*', "username='" + username + "'"], function (result) {
-                        var using = eval(result.rows.item(0).using_staff);
-                        var user_biker = using[0];
-                        var user_moto = using[1];
-                        var user_wheel = using[2];
-                        var user_engine = using[3];
-
-                        console.log("用户已装备角色列表|仓库：" + user_biker);
-                        console.log("用户已装备车架列表|仓库：" + user_moto);
-                        console.log("用户已装备轮组列表|仓库：" + user_wheel);
-                        console.log("用户已装备引擎列表|仓库：" + user_engine);
-
-                        biker.select(['*', "id='" + user_biker + "'"], function (result_biker) {
-                            moto.select(['*', "id='" + user_moto + "'"], function (result_moto) {
-                                wheel.select(['*', "id='" + user_wheel + "'"], function (result_wheel) {
-                                    var results = [result_biker, result_moto, result_wheel];
-                                    var result_img = [];
-                                    for (var i = 0; i < results.length; i++) {
-                                        var img = results[i].rows.item(0).img_2;
-                                        result_img.push(img);
-                                    }
-                                    fn(result_img);
-                                    if (fn2) {
-                                        engine.select(['*', "id='" + user_engine + "'"], function (result_engine) {
-                                            results.push(result_engine);
-                                            fn2(result, results)
-                                        });
-                                    }
-                                })
-                            })
-
-                        })
-                    });
-                }
-
+                // 预览角色与装备属性
                 load_preview(
                         function (result_img) {
                             var role = new Role([
@@ -328,8 +389,6 @@
                         }
                 );
 
-                // todo 装备属性
-
 
             });
 
@@ -342,6 +401,46 @@
             shopScene.bind("LoadShop", function (e, shop, preview) {
 //                alert(); //todo ?? 直接载入不执行 从主界面跳转才执行
                 var username = localStorage.userOnline;
+
+                // 预览
+                function load_preview(fn1, fn2) {
+                    user.select(['*', "username='" + username + "'"], function (result) {
+
+                        var using = eval(result.rows.item(0).using_staff);
+                        var user_biker = using[0];
+                        var user_moto = using[1];
+                        var user_wheel = using[2];
+                        var user_engine = using[3];
+
+                        console.log("用户已装备角色列表|仓库：" + user_biker);
+                        console.log("用户已装备车架列表|仓库：" + user_moto);
+                        console.log("用户已装备轮组列表|仓库：" + user_wheel);
+                        console.log("用户已装备引擎列表|仓库：" + user_engine);
+
+                        biker.select(['*', "id='" + user_biker + "'"], function (result_biker) {
+                            moto.select(['*', "id='" + user_moto + "'"], function (result_moto) {
+                                wheel.select(['*', "id='" + user_wheel + "'"], function (result_wheel) {
+                                    var results = [result_biker, result_moto, result_wheel];
+                                    var result_img = [];
+                                    for (var i = 0; i < results.length; i++) {
+                                        var img = results[i].rows.item(0).img_2;
+                                        result_img.push(img);
+                                    }
+                                    if (fn1) {
+                                        fn1(result_img);
+                                    }
+                                    ;
+                                    if (fn2) {
+                                        fn2(result)
+                                    }
+                                })
+                            })
+
+                        });
+
+
+                    });
+                }
 
                 // 生成商品项目
                 function load_item(result) {
@@ -357,6 +456,8 @@
                                 <button></button>\
                             </div>\
                         ');
+
+                        // todo 已装备物品显示红叉
 //                        console.log($item[0]);
 
                         // 购买单击事件
@@ -376,7 +477,7 @@
                                 // 是否已购买
                                 for (var i = 0; i < owning.length; i++) {
                                     for (var j = 0; j < owning[i].length; j++) {
-                                        console.log(owning[i][j]==2);
+                                        console.log(owning[i][j] == 2);
                                         if (item_id == owning[i][j]) {
                                             alert("已购买过该物品");
                                             return null;
@@ -390,26 +491,44 @@
                                     return null;
                                 }
 
-                                // 修改用户剩余金额
-                                user.update([
-                                    "coin ="+(localStorage.userCoin - item_price),
-                                    "username='"+username+"'"
-                                ]);
-
-
-
-                                // todo 根据id不同 存放至不同位置
-                                // todo 修改用户已购买名单
-//                                user.update(["",""])
+                                // 根据id不同 存放至不同位置
                                 if (item_id < 100) {
-
+                                    owning[0].push(item_id)
                                 }
                                 else if (item_id < 200) {
+                                    owning[1].push(item_id)
                                 }
                                 else if (item_id < 300) {
+                                    owning[2].push(item_id)
                                 }
                                 else if (item_id < 400) {
+                                    owning[3].push(item_id)
                                 }
+
+
+                                // 处理数据转化成字符串
+                                var new_owning = "";
+                                new_owning += "[";
+                                for (var m = 0; m < owning.length; m++) {
+                                    new_owning += "[";
+                                    for (var n = 0; n < owning[m].length; n++) {
+                                        new_owning += owning[m][n] + ",";
+                                    }
+                                    new_owning = new_owning.slice(0, -1);
+                                    new_owning += "],";
+                                }
+                                new_owning = new_owning.slice(0, -1);
+                                new_owning += "]";
+//                                console.log(new_owning);
+
+                                // 修改用户剩余金额，已购列表
+                                user.update([
+                                    "coin =" + (localStorage.userCoin - item_price) + " ,owning_staff = '" + new_owning + "'",
+                                    "username='" + username + "'"
+                                ]);
+
+                                // 刷新本地储存的用户已购列表
+                                localStorage.userOwning = new_owning;
 
                                 // 重载预览界面
                                 load_preview(function (result_img) {
@@ -425,11 +544,40 @@
                                     preview.children("span").html("我的金币：" + result.rows.item(0).coin);
                                 });
 
+
                                 // 购买成功
                                 alert("购买成功")
                             });
+                        });
 
+                        // 预览单击事件
+                        $item.children("button:eq(1)").click(function () {
+                            var item_id = $(this).parent().attr("data-id");
 
+                            load_preview(function (result_img) {
+                                var img_list = [
+                                    "app/static/img/" + result_img[1],
+                                    "app/static/img/" + result_img[0],
+                                    "app/static/img/" + result_img[2]
+                                ];
+
+                                // 预览
+                                if (item_id < 100) {
+                                    img_list[1] = "app/static/img/biker/c" + item_id + ".png"
+                                }
+                                else if (item_id < 200) {
+                                    img_list[0] = "app/static/img/moto/m" + (item_id - 100) + ".png"
+                                }
+                                else if (item_id < 300) {
+                                    img_list[2] = "app/static/img/wheel/w" + (item_id - 200) + ".png"
+                                }
+
+                                // 重建预览角色
+                                var role = new Role(img_list, preview.children("div"));
+                                preview.children("div").empty();
+                                role.run();
+                                role.move(65, 115);
+                            })
                         });
 
                         $(shop).append($item);// todo
@@ -465,45 +613,8 @@
                 $(shop).trigger("loadBikerItem");
 
                 // 预览
-                function load_preview(fn1, fn2) {
-
-                    user.select(['*', "username='" + username + "'"], function (result) {
-
-                        var using = eval(result.rows.item(0).using_staff);
-                        var user_biker = using[0];
-                        var user_moto = using[1];
-                        var user_wheel = using[2];
-                        var user_engine = using[3];
-
-                        console.log("用户已装备角色列表|仓库：" + user_biker);
-                        console.log("用户已装备车架列表|仓库：" + user_moto);
-                        console.log("用户已装备轮组列表|仓库：" + user_wheel);
-                        console.log("用户已装备引擎列表|仓库：" + user_engine);
-
-                        biker.select(['*', "id='" + user_biker + "'"], function (result_biker) {
-                            moto.select(['*', "id='" + user_moto + "'"], function (result_moto) {
-                                wheel.select(['*', "id='" + user_wheel + "'"], function (result_wheel) {
-                                    var results = [result_biker, result_moto, result_wheel];
-                                    var result_img = [];
-                                    for (var i = 0; i < results.length; i++) {
-                                        var img = results[i].rows.item(0).img_2;
-                                        result_img.push(img);
-                                    }
-                                    if(fn1){
-                                        fn1(result_img);
-                                    };
-                                    if (fn2) {
-                                        fn2(result)
-                                    }
-                                })
-                            })
-
-                        });
-
-
-                    });
-                }
                 load_preview(function (result_img) {
+                    preview.children("div").empty();
                     var role = new Role([
                         "app/static/img/" + result_img[1],
                         "app/static/img/" + result_img[0],
@@ -515,8 +626,6 @@
                     preview.children("h1").html(result.rows.item(0).username);
                     preview.children("span").html("我的金币：" + result.rows.item(0).coin);
                 });
-
-
             });
 
             shopScene.bind("returnToMain", function () {
