@@ -807,14 +807,24 @@ function GameScene() {
             "app/static/img/wheel/w2.png"
         ], scene_div);
         var road = new Road("app/static/img/map2.jpg", $("#road"));
+        var coin_1 = new Coin($("#scene_div"));
+
+
+        coin_1.run();
+        coin_1.move(600, 200);
 
         road.run();
+
         role.run();
-        role_1.run();
-        cnt.run();
-        meter.run();
         role.move(150, 350);
+
+        role_1.run();
         role_1.move(150, 200);
+
+        cnt.run();
+
+        meter.run();
+
 
         // todo 倒计时 settimeout
         setTimeout(function () {
@@ -835,25 +845,57 @@ function GameScene() {
         }, 6000);
 
         function game_begin() {
-            var speed_1 = 0;
+            var speed_x_1 = 0;
 
-            function begin() {
-                var acc = cnt.acc()[0] <= 0 ? -0.5 : cnt.acc()[0] / 10;
-                meter.meter.value += acc;
-                speed_1 += 0.1;
+            function begin(timer) {
+                var road_width = road.size()[0];
+                var road_height = road.size()[1];
+                var cnt_x = cnt.acc()[0];
+                var cnt_y = cnt.acc()[1];
+                var max_speed;
+                var max_acc;
+                var speed_y;
+
+                var acc = cnt_x <= 0 ? -0.5 : cnt_x / 10;
+                var speed_x = meter.meter.value += acc;
+                speed_x = speed_x < 0 ? 0 : speed_x;
+
+                // 道路移动
+                road.move(speed_x / 5);
+
+                // 判断是否到达边界 限制车手移动范围
+                if (role.position()[1] <= 0.35 * road_height) {
+                    role.move(speed_x / 5, 0);
+                } else {
+                    role.move(speed_x / 5, cnt_y);
+                }
+                role.roll(speed_x);
+
+                // todo 碰撞 三个方向
+
+                // 电脑
+                speed_x_1 += 0.05;
+                role_1.move(speed_x_1 / 5);
+                role_1.roll(speed_x_1);
+
+
+                //todo 速度计
+                //todo 计时器 clock
+                //todo 障碍物 水/桶
 //                $("h1").html("加速度：" + (acc).toFixed(2) + "/10ms，速度：" + (meter.meter.value).toFixed(2));
-                road.move(meter.meter.value / 5);
 
-                role.move(meter.meter.value / 5, cnt.acc()[1]);
-                role.roll(meter.meter.value);
 
-                role_1.move(speed_1/5);
-                role_1.roll(speed_1);
+                if (role.position()[0] > road_width * 0.81 / 2) {
+                    alert("游戏结束");
+                    // todo 跳转结算页面
+                    //todo trigger("result")
+                    clearInterval(timer)
+                }
 
             }
 
-            meter.bind("speedChange", function(){
-                begin();
+            meter.bind("speedChange", function (e, timer) {
+                begin(timer);
             });
         }
 

@@ -1275,6 +1275,7 @@ button {
     top: 20vh;
     right: 11.5vw;
 }
+
 #_game_speedometer div {
     max-width: 100%;
     width: 0%;
@@ -1295,11 +1296,13 @@ button {
     top: 4.6vh;
     right: 2vw;
 }
+
 #_countdown {
     position: fixed;
     width: 100%;
     height: 100%;
 }
+
 #_countdown_empty {
     width: 0;
     height: 100%;
@@ -1315,7 +1318,83 @@ button {
     display: inline-block;
     vertical-align: middle;
 }
-#_countdown_body span{
+
+#_countdown_body span {
     font-size: 0.5rem;
+}
+
+#_coin {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top:0px;
+    left:0px;
+    /* 漏泄 px 可能会导致move() 方法报错*/
+    background-image: url(../img/Coin.png);
+    -webkit-animation: coin 2s steps(1, start) infinite;
+    /* ?? step() */
+}
+
+@-webkit-keyframes coin {
+    0% {
+        background-position: 0 0;
+    }
+    5.2% {
+        background-position: 60px 0;
+    }
+    10.5% {
+        background-position: 120px 0;
+    }
+    15.8% {
+        background-position: 180px 0;
+    }
+    21% {
+        background-position: 240px 0;
+    }
+    26.3% {
+        background-position: 300px 0;
+    }
+    31.5% {
+        background-position: 360px 0;
+    }
+    36.8% {
+        background-position: 420px 0;
+    }
+    42% {
+        background-position: 480px 0;
+    }
+    47.3% {
+        background-position: 540px 0;
+    }
+    52.6% {
+        background-position: 60px -60px;
+    }
+    57.8% {
+        background-position: 120px -60px;
+    }
+    63.1% {
+        background-position: 180px -60px;
+    }
+    68.4% {
+        background-position: 240px -60px;
+    }
+    73.6% {
+        background-position: 300px -60px;
+    }
+    78.86% {
+        background-position: 360px -60px;
+    }
+    84.1% {
+        background-position: 420px -60px;
+    }
+    89.4% {
+        background-position: 480px -60px;
+    }
+    94.7% {
+        background-position: 540px -60px;
+    }
+    99.9% {
+        background-position: 0 -60px;
+    }
 }
 

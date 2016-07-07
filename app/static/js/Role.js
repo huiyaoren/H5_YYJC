@@ -21,6 +21,10 @@ function Role(imgList, div) {
             .css("left", movementX)
             .css("top", movementY)
     };
+    this.position = function(){
+        return [Number($box.css("left").slice(0, -2)),Number($box.css("top").slice(0, -2))]
+    };
+
     function createUI() {
 
         $box.css({

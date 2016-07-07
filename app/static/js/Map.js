@@ -11,12 +11,16 @@ function Road(img, div) { // todo 变量名 img 易混淆
         $(div).css("left", movement)
 
     };
+    this.size = function () {
+        return [$(div)[0].offsetWidth, $(div)[0].offsetHeight]
+
+    };
     function createUI() {
         $(div).css({
             position: "absolute",
-            width:"2208%",
+            width: "2208%",
             height: "100%",
-            overflow:"hidden",
+            overflow: "hidden",
             top: 0,
             left: 0
         });

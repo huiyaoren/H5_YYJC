@@ -39,15 +39,15 @@
             meter.run();
             role.move(150, 350);
 
-            meter.bind("speedChange", function () {
-
-                var acc = cnt.acc()[0] <= 0 ? -0.5 : cnt.acc()[0] / 10;
-                meter.meter.value += acc;
-//                $("h1").html("加速度：" + (acc).toFixed(2) + "/10ms，速度：" + (meter.meter.value).toFixed(2));
-                road.move(meter.meter.value / 5);
-                role.move(meter.meter.value / 5, cnt.acc()[1]);
-                role.roll(meter.meter.value)
-            });
+//            meter.bind("speedChange", function () {
+//
+//                var acc = cnt.acc()[0] <= 0 ? -0.5 : cnt.acc()[0] / 10;
+//                meter.meter.value += acc;
+////                $("h1").html("加速度：" + (acc).toFixed(2) + "/10ms，速度：" + (meter.meter.value).toFixed(2));
+//                road.move(meter.meter.value / 5);
+//                role.move(meter.meter.value / 5, cnt.acc()[1]);
+//                role.roll(meter.meter.value)
+//            });
         });
 
 
@@ -88,6 +88,7 @@
                 <span>倒计时</span>
             </div>
         </div>
+        <div id="_coin"></div>
     </div>
 </div>
 
