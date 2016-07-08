@@ -767,7 +767,7 @@ function GameScene() {
             <span>00:00</span>\
         </div>\
         <div id="_game_coin">\
-            <span>+262</span>\
+            <span>+0</span>\
             </div>\
             <div id="_game_speedometer">\
             <div></div>\
@@ -798,28 +798,69 @@ function GameScene() {
         var meter = new Speedometer(meterBox);
         var role = new Role([
             "app/static/img/moto/m2.png",
-            "app/static/img/biker/c6.png",
+            "app/static/img/biker/c4.png",
             "app/static/img/wheel/w2.png"
         ], scene_div);
         var role_1 = new Role([
             "app/static/img/moto/m2.png",
+            "app/static/img/biker/c5.png",
+            "app/static/img/wheel/w2.png"
+        ], scene_div);
+        var role_2 = new Role([
+            "app/static/img/moto/m2.png",
             "app/static/img/biker/c6.png",
             "app/static/img/wheel/w2.png"
         ], scene_div);
+        var role_3 = new Role([
+            "app/static/img/moto/m2.png",
+            "app/static/img/biker/c7.png",
+            "app/static/img/wheel/w2.png"
+        ], scene_div);
+        var role_4 = new Role([
+            "app/static/img/moto/m2.png",
+            "app/static/img/biker/c8.png",
+            "app/static/img/wheel/w2.png"
+        ], scene_div);
         var road = new Road("app/static/img/map2.jpg", $("#road"));
-        var coin_1 = new Coin($("#scene_div"));
-
-
-        coin_1.run();
-        coin_1.move(600, 200);
+        localStorage.max_speed = 100;
+        localStorage.max_acc = 100;
+        localStorage.speed_y = 100;
 
         road.run();
+        var road_width = road.size()[0];
+        var road_height = road.size()[1];
+
+        // 以 road_width 的 1% 为基本单位
+        var coin_position_list = [];
+        for (var i = 0; i < 30; i++) {
+            var coin = new Coin($("#scene_div"));
+            var random_y = Math.floor(Math.random() * 5);
+            //console.log(random_y) // todo 重构一个生成随机数的函数
+            var coin_x = road_width * 0.1 + i * road_width * 0.01;
+            var coin_y = road_height * (0.45 + random_y * 0.1035);
+
+            coin.run();
+            coin.move(coin_x, coin_y);
+            coin_position_list.push(coin.position())
+        }
+        console.log(coin_position_list);
+        var $coin = $("._coin");
+        // (10% + 1% * 30)(42% 52% 62.3% 73.2% 83.4%)
 
         role.run();
-        role.move(150, 350);
+        role.move(road_width * 0.005, road_height * 0.42);
 
         role_1.run();
-        role_1.move(150, 200);
+        role_1.move(road_width * 0.005, road_height * 0.52);
+
+        role_2.run();
+        role_2.move(road_width * 0.005, road_height * 0.623);
+
+        role_3.run();
+        role_3.move(road_width * 0.005, road_height * 0.732); // todo 150改size百分比
+
+        role_4.run();
+        role_4.move(road_width * 0.005, road_height * 0.834);
 
         cnt.run();
 
@@ -842,64 +883,137 @@ function GameScene() {
         setTimeout(function () {
             $("#_countdown_body").children("span").empty().hide();
             game_begin()
-        }, 6000);
+        }, 1000);// todo 6
 
         function game_begin() {
             var speed_x_1 = 0;
+            var time_count = 0;
+            var coin_count = 0;
+
+            function num_str(num) {
+                if (num < 10) {
+                    num = "0" + num
+                }
+                return num
+            }
+
+            function num_time(time) {
+                time = time / 50;
+                var min = num_str(parseInt(time / 60));
+                var sec = num_str(parseInt(time % 60));
+                return min + ":" + sec;
+            }
 
             function begin(timer) {
+                var max_speed = localStorage.max_speed;
+                var max_acc = localStorage.max_acc;
+                var speed_y = localStorage.speed_y;
+
                 var road_width = road.size()[0];
                 var road_height = road.size()[1];
                 var cnt_x = cnt.acc()[0];
                 var cnt_y = cnt.acc()[1];
-                var max_speed;
-                var max_acc;
-                var speed_y;
-
-                var acc = cnt_x <= 0 ? -0.5 : cnt_x / 10;
-                var speed_x = meter.meter.value += acc;
-                speed_x = speed_x < 0 ? 0 : speed_x;
+                var role_position = role.position();
+                var ai_position_list = [
+                    role_1.position(),
+                    role_2.position(),
+                    role_3.position(),
+                    role_4.position()
+                ];
+                var acc = cnt_x <= 0 ? -0.5 : cnt_x * (max_acc / 100) / 10;
+                var speed_per = meter.meter.value += acc;
+                var speed_x = speed_per < 0 ? 0 : speed_per * (max_speed / 100);
 
                 // 道路移动
                 road.move(speed_x / 5);
 
                 // 判断是否到达边界 限制车手移动范围
-                if (role.position()[1] <= 0.35 * road_height) {
+                if (
+                    (role_position[1] <= 0.38 * road_height && cnt_y < 0) ||
+                    (role_position[1] >= 0.9 * road_height && cnt_y > 0)
+                ) {
                     role.move(speed_x / 5, 0);
                 } else {
-                    role.move(speed_x / 5, cnt_y);
+                    role.move(speed_x / 5, cnt_y * (speed_y / 100));
                 }
                 role.roll(speed_x);
 
-                // todo 碰撞 三个方向
+                // 角色数据
+                //console.log("速度：" + (speed_x / 100) * max_speed);
+                //console.log("加速：" + acc);
+                //console.log("转向：" + cnt_y);
+
+
+                // todo 碰撞
+                if (role_position[0] > road_width * 0.1 && role_position[0] < road_width * 0.4) {
+                    var road_break_x = parseInt((role_position[0] + 128 - road_width * 0.1) / (road_width * 0.01));
+                    // todo 与金币体积对比
+                    var coin_x = coin_position_list[road_break_x][0];
+                    var coin_y = coin_position_list[road_break_x][1];
+                    var role_x = role_position[0];
+                    var role_y = role_position[1];
+                    if (coin_x > role_x && coin_x < role_x + 128 && coin_y > role_y && coin_y < role_y + 80) {
+                        //$("#_countdown_body").children("span").empty().html(Number(road_break_x)+1);
+                        $($coin[road_break_x]).hide();
+                        coin_count++;
+                        $("#_game_coin").children("span").html("+" +coin_count);
+                        //return // 选择时机return是否能提高性能？
+                    }
+                }
+                //coin.move(road_width * 0.1 + i * road_width * 0.01, road_height * 0.45);
+
 
                 // 电脑
-                speed_x_1 += 0.05;
+                if (speed_x_1 < 80) {
+                    speed_x_1 += 0.05;
+                }
                 role_1.move(speed_x_1 / 5);
                 role_1.roll(speed_x_1);
 
 
-                //todo 速度计
-                //todo 计时器 clock
+                // 速度计
+                $("#_game_speedometer").children("div").css("width", speed_per + "%");
+
+
+                // 计时器 clock
+                $("#_game_timer").children("span:eq(0)").html(localStorage.stageNum + "-" + localStorage.mapNum);
+                time_count += 1;
+                $("#_game_timer").children("span:eq(1)").html(num_time(time_count));
+
+
+                // 排名
+                // todo 把总行驶距离列表排序, for 循环查找用户角色行驶距离
+                var role_rank = 5;
+                for (var i = 0; i < ai_position_list.length; i++) {
+                    if (role_position[0] > ai_position_list[i][0]) {
+                        role_rank -= 1;
+                    }
+                }
+                //console.log("rank: "+role_rank);
+                $("#_game_rank").children("div").css("background-image", "url(app/static/img/" + role_rank + ".png)");
+
+
                 //todo 障碍物 水/桶
 //                $("h1").html("加速度：" + (acc).toFixed(2) + "/10ms，速度：" + (meter.meter.value).toFixed(2));
 
+                console.log("角色坐标|游戏: " + role.position());
+                console.log("地图尺寸|游戏: " + [road_width, road_height]);
 
-                if (role.position()[0] > road_width * 0.81 / 2) {
-                    alert("游戏结束");
+                // 到达终点
+                if (role.position()[0] > road_width * 0.87 / 2) {
                     // todo 跳转结算页面
-                    //todo trigger("result")
-                    clearInterval(timer)
-                }
 
+                    // todo 记录排名、获得金币数
+                    // todo 修改用户存档、金币
+                    clearInterval(timer);
+                    alert("游戏结束");
+                    $(document.body).trigger("goToResult");
+                }
             }
 
             meter.bind("speedChange", function (e, timer) {
                 begin(timer);
             });
         }
-
     }
-
-
 }

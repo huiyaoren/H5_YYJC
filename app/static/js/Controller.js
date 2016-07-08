@@ -32,9 +32,11 @@ function Controller(div) {// todo 样式未从css文件中剥离出来 用代码
         ctx.fill();
         speed = outputVal(d / 2, d / 2)
     };
+
     this.bind = function (eventName, eventFn) {
         $(box).on(eventName, eventFn)
     };
+
     fakeBox.ondrag = function (event) {
         var X = event.clientX - div.offsetLeft;//jq.offset().left
         var Y = event.clientY - div.offsetTop;
@@ -59,6 +61,7 @@ function Controller(div) {// todo 样式未从css文件中剥离出来 用代码
         }
         $(box).trigger("start", speed);
     };
+
     fakeBox.ondragend = function () {
         ctx.clearRect(0, 0, d, d);
         ctx.beginPath();

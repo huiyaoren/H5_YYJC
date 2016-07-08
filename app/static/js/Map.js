@@ -17,12 +17,13 @@ function Road(img, div) { // todo 变量名 img 易混淆
     };
     function createUI() {
         $(div).css({
-            position: "absolute",
+            position: "fixed",
             width: "2208%",
             height: "100%",
             overflow: "hidden",
             top: 0,
-            left: 0
+            left: 0,
+            "z-index":"-1"
         });
         $("<img/>")
             .attr("src", img)

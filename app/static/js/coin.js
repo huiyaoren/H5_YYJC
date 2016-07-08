@@ -3,7 +3,7 @@
  */
 
 function Coin($box) {
-    var $div = $("<div id='_coin'></div>");
+    var $div = $("<div class='_coin'></div>");
 
     this.run = function () {
         $box.append($div)
