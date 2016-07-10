@@ -13,6 +13,9 @@
     <script src="app/static/js/Role.js"></script>
     <script src="app/static/js/Database.js"></script>
     <script src="app/static/js/Coin.js"></script>
+    <script src="app/static/js/Sand.js"></script>
+    <script src="app/static/js/Barrel.js"></script>
+    <script src="app/static/js/Ice.js"></script>
     <script src="app/static/js/jquery.validate.js"></script>
     <script src="app/static/js/messages_zh.js"></script>
     <script>
@@ -46,13 +49,13 @@
 
             biker.drop();
             biker.create();
-            biker.insert([2, 'kill_you', '角色2', 0, 'biker/c2s.png', 'biker/c2.png', 'biker/cha2.png']);
-            biker.insert([3, 'need_to_pee', '角色3', 200, 'biker/c3s.png', 'biker/c3.png', 'biker/cha3.png']);
-            biker.insert([4, 'run_away', '角色4', 200, 'biker/c4s.png', 'biker/c4.png', 'biker/cha4.png']);
-            biker.insert([5, 'ohh_shit', '角色5', 200, 'biker/c5s.png', 'biker/c5.png', 'biker/cha5.png']);
-            biker.insert([6, 'you_jump', '角色6', 200, 'biker/c6s.png', 'biker/c6.png', 'biker/cha6.png']);
-            biker.insert([7, 'i_jump', '角色7', 200, 'biker/c7s.png', 'biker/c7.png', 'biker/cha7.png']);
-            biker.insert([8, 'you_idiot', '角色8', 200, 'biker/c8s.png', 'biker/c8.png', 'biker/cha8.png']);
+            biker.insert([2, '冲刺', '角色2', 0, 'biker/c2s.png', 'biker/c2.png', 'biker/cha2.png']);
+            biker.insert([3, '潜伏', '角色3', 200, 'biker/c3s.png', 'biker/c3.png', 'biker/cha3.png']);
+            biker.insert([4, '战吼', '角色4', 200, 'biker/c4s.png', 'biker/c4.png', 'biker/cha4.png']);
+            biker.insert([5, '嘲讽', '角色5', 200, 'biker/c5s.png', 'biker/c5.png', 'biker/cha5.png']);
+            biker.insert([6, '冲锋', '角色6', 200, 'biker/c6s.png', 'biker/c6.png', 'biker/cha6.png']);
+            biker.insert([7, '圣盾', '角色7', 200, 'biker/c7s.png', 'biker/c7.png', 'biker/cha7.png']);
+            biker.insert([8, '火球', '角色8', 200, 'biker/c8s.png', 'biker/c8.png', 'biker/cha8.png']);
 
             moto.drop();
             moto.create();
@@ -89,7 +92,7 @@
 //                [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 //            ];
             var save_list = [
-                [0, 1, 1, -1, -1, -1, -1, -1, -1, -1],
+                [0, -1, -1, -1, -1, -1, -1, -1, -1, -1],
                 [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
                 [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
                 [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
@@ -102,12 +105,12 @@
             user.insert(['sdfsdf', 'sdfsdf', 'sdfsdf', 9999, 99, '[[2,3,4],[102,103],[202,203],[302,303]]', '[2,102,202,302]', JSON.stringify(save_list)]);
 //            user.drop();
 
-            console.log(JSON.parse(JSON.stringify(save_list)));
+//            console.log(JSON.parse(JSON.stringify(save_list)));
 
 
 // ---------------------------- -----------------------------------------------
-
-            director.runScene(gameScene);
+            localStorage.gameReady = false;
+            director.runScene(loginScene);
 
             // 登陆
             loginScene.bind("clickSignButton", function () {
@@ -174,11 +177,11 @@
                             username,
                             password,
                             username,
-                            9999,
+                            1000,
                             99,
-                            '[[],[],[],[]]',
-                            '[[],[],[],[]]',
-                            '[]'
+                            '[[2],[101],[201],[301]]',
+                            '[2, 102, 202, 302]',
+                            JSON.stringify(save_list)
                         ]);
                         alert("注册成功,将跳转至登陆界面");
                         director.runScene(loginScene);
@@ -260,6 +263,13 @@
                                 <button></button>\
                             </div>\
                         ');
+                        var using = eval(localStorage.userUsing);
+                        for (var k = 0; k < using.length; k++) {
+                            if ($item.attr("data-id") == using[k]) {
+                                $item.children("img:eq(1)").show();
+                            }
+
+                        }
 
                         // todo     选中功能
                         $item.click(function () {
@@ -271,7 +281,7 @@
                             }
                             $(this).children("img:eq(1)").show();
 
-                            var using = eval(localStorage.userUsing);
+//                            var using = eval(localStorage.userUsing);
                             if (item_id < 100) {
                                 using[0] = item_id
                             }
@@ -407,7 +417,9 @@
                             preview.children("span:eq(2)").html("最大速度: " + results[1].rows.item(0).max_speed);
                             preview.children("span:eq(1)").html("转向性能: " + results[2].rows.item(0).turning_speed);
                             preview.children("span:eq(0)").html("加速性能: " + results[3].rows.item(0).acceleration);
-
+                            localStorage.max_speed = results[1].rows.item(0).max_speed
+                            localStorage.max_acc = results[3].rows.item(0).acceleration;
+                            localStorage.speed_y = results[2].rows.item(0).turning_speed;
                         }
                 );
 
@@ -416,6 +428,9 @@
 
             repertorytScene.bind("returnToMain_2", function () {
                 director.runScene(mainScene);
+            });
+            repertorytScene.bind("goToGame", function () {
+                director.runScene(gameScene);
             });
 
 
@@ -505,6 +520,12 @@
                                             return null;
                                         }
                                     }
+                                }
+
+                                // 余额是否足够
+                                if (localStorage.userCoin - item_price < 0) {
+                                    alert("余额不足");
+                                    return null
                                 }
 
                                 // 弹框确认购买
@@ -614,24 +635,28 @@
                         load_item(result);
                     });
                 });
+
                 shopScene.bind("loadBikerItem", function () {
                     biker.select(['*', 'id>0'], function (result) {
                         console.log("查询结果数量|角色：" + result.rows.length);
                         load_item(result);
                     });
                 });
+
                 shopScene.bind("loadEngineItem", function () {
                     engine.select(['*', 'id>0'], function (result) {
                         console.log("查询结果数量|引擎：" + result.rows.length);
                         load_item(result);
                     });
                 });
+
                 shopScene.bind("loadWheelItem", function () {
                     wheel.select(['*', 'id>0'], function (result) {
                         console.log("查询结果数量|车轮：" + result.rows.length);
                         load_item(result);
                     });
                 });
+
                 $(shop).trigger("loadBikerItem");
 
                 // 预览
@@ -664,8 +689,16 @@
                 director.runScene(mainScene)
             });
             stageScene.bind("chooseStage", function (e, stage_num) {
+                var username = localStorage.userOnline;
                 localStorage.stageNum = stage_num;
                 localStorage.saveData_stage = JSON.stringify(JSON.parse(localStorage.saveData)[stage_num - 1]);
+                //todo
+                user.select(["*", "username='" + username + "'"], function (result) {
+//                    localStorage.userCoin = result.rows.item(0).coin;
+//                    localStorage.userOwning = result.rows.item(0).owning_staff;
+//                    localStorage.userUsing = result.rows.item(0).using_staff;
+                    localStorage.saveData = result.rows.item(0).record;
+                });
                 director.runScene(mapScene)
             });
 
@@ -673,7 +706,7 @@
             // 赛段选择
             mapScene.bind("loadMapScene", function (e, map) {
 
-//                console.log($(map).children());
+                // 隐藏关卡锁定图片
                 for (var i = 0; i < $(map).children().length; i++) {
                     $(map).children(":eq(" + i + ")").children("img:eq(1)").hide()
                 }
@@ -715,10 +748,58 @@
             //todo 事件绑定 or localStorage.mapNum                // todo 跳转至游戏页面
             mapScene.bind("clickMap", function (e, map, map_num) {
                 localStorage.mapNum = map_num;
-                director.runScene(gameScene);
+                localStorage.gameReady = true;
+                director.runScene(repertorytScene);
             });
             mapScene.bind("returnToStage", function () {
                 director.runScene(stageScene);
+            });
+
+
+            gameScene.bind("goToResult", function () {
+                localStorage.gameReady = false;
+                director.runScene(resultScene);
+
+            });
+
+            resultScene.bind("restartGame", function () {
+                director.runScene(gameScene);
+            });
+            resultScene.bind("returnToMain_4", function () {
+                director.runScene(mainScene);
+            });
+            resultScene.bind("changeRecord", function (e, roleRank) {
+                var username = localStorage.userOnline;
+                var mapNum = localStorage.mapNum - 1;
+                var stageNum = localStorage.stageNum - 1;
+                var record = JSON.parse(localStorage.saveData);
+                var rank = localStorage.result_roleRank;
+                var coin = localStorage.userCoin;
+
+                console.log(record[stageNum]);
+                record[stageNum][mapNum] = 4 - rank;
+
+
+                user.update([
+                    "coin =" + coin + " ,record = '" + JSON.stringify(record) + "'",
+                    "username='" + username + "'"
+                ]);
+                if (rank <= 3) {
+                    if (mapNum < 9) {
+                        var num = record[stageNum][mapNum + 1];
+                        record[stageNum][mapNum + 1] = num == -1 ? 0 : num;
+                    }
+                    else if (mapNum >= 9) {
+                        if (stageNum < 7) {
+                            var num = record[stageNum + 1][0];
+                            record[stageNum + 1][0] = num == -1 ? 0 : num;
+                        }
+                    }
+                    user.update([
+                        "coin =" + coin + " ,record = '" + JSON.stringify(record) + "'",
+                        "username='" + username + "'"
+                    ]);
+                }
             });
 
 //            readyScene.bind("startGame", function(){

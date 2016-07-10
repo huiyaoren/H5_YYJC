@@ -938,6 +938,36 @@ button {
     bottom: -120%;
     left: 29%;
 }
+#_result_up p:nth-child(1) span:nth-child(5) {
+
+    font-size: 7.5vh;
+    color: white;
+    font-weight: 900;
+    -webkit-text-stroke: 2px black;
+    position: absolute;
+    bottom: 25%;
+    left: -140%;
+}
+#_result_up p:nth-child(1) span:nth-child(6) {
+
+    font-size: 7.5vh;
+    color: white;
+    font-weight: 900;
+    -webkit-text-stroke: 2px black;
+    position: absolute;
+    bottom: -35%;
+    left: -220%;
+}
+#_result_up p:nth-child(1) span:nth-child(7) {
+
+    font-size: 7.5vh;
+    color: white;
+    font-weight: 900;
+    -webkit-text-stroke: 2px black;
+    position: absolute;
+    bottom: -35%;
+    left: -60%;
+}
 
 #_result_up p:nth-child(2) {
     position: absolute;
@@ -1257,13 +1287,15 @@ button {
     height: 68px;
     top: 4.6vh;
     right: 11.5vw;
+    z-index: 11;
+
 }
 
 #_game_coin span {
     font-size: .4rem;
     position: absolute;
     top: 13px;
-    left: 80px
+    left: 80px;
 }
 
 #_game_speedometer {
@@ -1295,7 +1327,23 @@ button {
 
     top: 4.6vh;
     right: 2vw;
+    z-index: 11;
 }
+
+#_game_start {
+    display: none;
+    position: fixed;
+    background: rgba(0, 0, 0, 0);
+    background-image: url(../img/pause2.png);
+    background-size: 100% 100%;
+    width: 64px;
+    height: 62px;
+
+    top: 4.6vh;
+    right: 2vw;
+    z-index: 11;
+}
+
 
 #_countdown {
     position: fixed;
@@ -1333,6 +1381,27 @@ button {
     background-image: url(../img/Coin.png);
     -webkit-animation: coin 2s steps(1, start) infinite;
     /* ?? step() */
+}
+
+._ice {
+    width: 1535px;
+    height: 150px;
+    position: absolute;
+    top:0px;
+    left:0px;
+    /* 漏泄 px 可能会导致move() 方法报错*/
+    background-image: url(../img/ice.png);
+}
+
+
+._sand {
+    width: 629px;
+    height: 114px;
+    position: absolute;
+    top:0px;
+    left:0px;
+    /* 漏泄 px 可能会导致move() 方法报错*/
+    background-image: url(../img/sand.png);
 }
 
 @-webkit-keyframes coin {
@@ -1396,5 +1465,19 @@ button {
     99.9% {
         background-position: 0 -60px;
     }
+}
+
+._barrel {
+    /*width: 414px;*/
+    /*height: 274px;*/
+    width: 105px;
+    height: 70px;
+    position: absolute;
+    top:0px;
+    left:0px;
+    /* 漏泄 px 可能会导致move() 方法报错*/
+    background-image: url(../img/mutong1.png);
+    background-size: 100% 100%;
+    /* ?? step() */
 }
 
